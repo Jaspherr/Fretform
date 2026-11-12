@@ -1,0 +1,246 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Neckline is an annotated fretboard notebook: cool chart paper, navy ink.
+ * Rule: the interface chrome is monochrome ink. Colour is reserved for music —
+ * if something is coloured, it is telling you what a note does.
+ */
+:root {
+  /* Paper & ink */
+  --bg: #f3f4f1;
+  --surface: #fbfbf9;
+  --surface-2: #e8eae6;
+  --ink: #18202b;
+  --ink-soft: #3c4652;
+  --muted: #5f6a74;
+  --line: #d7dcdc;
+  --line-strong: #b4bcbf;
+  --accent: var(--ink);
+  --accent-soft: #e2e6e8;
+  --focus: #1f6fd1;
+
+  /* Note roles — used on and off the fretboard */
+  --iv-root: #c8322b;
+  --iv-third: #2d78b0;
+  --iv-fifth: #c9921a;
+  --iv-seventh: #7652b8;
+  --iv-other: #4c7a5a;
+  --target: #0f8c74;
+  /* Text on top of a filled note */
+  --on-root: #ffffff;
+  --on-third: #ffffff;
+  --on-fifth: #18202b;
+  --on-seventh: #ffffff;
+  --on-other: #ffffff;
+  --on-target: #ffffff;
+  --select: #e8eae6;
+  /* Outlined (scale-only / background) notes */
+  --note-hollow: #fbfbf9;
+  --note-hollow-ink: #3c4652;
+
+  /* The neck, drawn in ink on paper */
+  --neck: #e6e9e5;
+  --fret-wire: #a3acb0;
+  --nut: #18202b;
+  --string: #6b767f;
+  --string-hi: #18202b;
+  --inlay: #cdd3d3;
+  --region: rgba(31, 111, 209, 0.07);
+  --region-line: rgba(31, 111, 209, 0.45);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.dark {
+  --bg: #11161d;
+  --surface: #171e27;
+  --surface-2: #202a35;
+  --ink: #e6e9e4;
+  --ink-soft: #bcc4c7;
+  --muted: #8d989f;
+  --line: #29323d;
+  --line-strong: #3d4855;
+  --accent-soft: #233041;
+  --focus: #6aa9f2;
+  --select: #2a3542;
+
+  --iv-root: #e5594a;
+  --iv-third: #55a0d6;
+  --iv-fifth: #dcab3c;
+  --iv-seventh: #a085e0;
+  --iv-other: #74a885;
+  --target: #34b394;
+  --on-root: #11161d;
+  --on-third: #11161d;
+  --on-fifth: #11161d;
+  --on-seventh: #11161d;
+  --on-other: #11161d;
+  --on-target: #11161d;
+  --note-hollow: #1b232d;
+  --note-hollow-ink: #c9d0d3;
+
+  --neck: #1b232d;
+  --fret-wire: #475360;
+  --nut: #d5dad6;
+  --string: #7f8b94;
+  --string-hi: #e6e9e4;
+  --inlay: #2a3440;
+  --region: rgba(106, 169, 242, 0.08);
+  --region-line: rgba(106, 169, 242, 0.5);
+}
+
+@theme inline {
+  --font-serif: 'Source Serif 4', ui-serif, Georgia, serif;
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-focus: var(--focus);
+  --color-root: var(--iv-root);
+  --color-third: var(--iv-third);
+  --color-fifth: var(--iv-fifth);
+  --color-seventh: var(--iv-seventh);
+  --color-other: var(--iv-other);
+  --color-target: var(--target);
+  --color-neck: var(--neck);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply font-sans text-[15px] leading-relaxed;
+    background: var(--bg);
+    min-height: 100dvh;
+    font-variant-numeric: tabular-nums;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-sans tracking-tight;
+    font-stretch: 88%;
+    font-weight: 650;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: var(--accent-soft);
+  }
+}
+
+/* Explanatory prose reads like margin notes in a notebook. */
+.prose-note {
+  font-family: var(--font-serif);
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/*
+ * Fretboard motion. Notes scale in from the centre when they appear, and
+ * filled ↔ outlined changes cross-fade, so you can see which notes stayed put
+ * when you switch shape, inversion or layer.
+ */
+.fret-dot {
+  transition: opacity 180ms var(--ease-out);
+}
+.fret-dot > :is(circle, rect, polygon) {
+  transition:
+    fill 180ms ease,
+    stroke 180ms ease;
+}
+.fret-dot-enter {
+  animation: dot-in 200ms var(--ease-out) both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes dot-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+.fade-in {
+  animation: fade-in 200ms var(--ease-out) both;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+.band {
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 140ms var(--ease-out);
+}
+/* Press feedback on anything tappable, so a tap always registers. */
+:is(button, .band, [role='radio']):not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/*
+ * Reduced motion: no scaling or sliding, but keep short cross-fades — they are
+ * what shows which notes stayed put when a shape changes.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  :is(button, .band, [role='radio']):active {
+    transform: none;
+  }
+  .fret-dot-enter {
+    animation: dot-fade 160ms ease both !important;
+  }
+}
+@keyframes dot-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Faint staff ruling for the home hero, like a notebook page. */
+.ruled {
+  background-image: repeating-linear-gradient(to bottom, transparent 0 27px, var(--line) 27px 28px);
+  background-position: 0 6px;
+}
+
+.scroll-x {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (hover: none) {
+  button,
+  a {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
