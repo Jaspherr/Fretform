@@ -105,7 +105,7 @@ export function AppShell() {
 
       <Dialog open={menuOpen} onOpenChange={setMenuOpen}>
         <DialogContent side="right" className="p-5">
-          <DialogTitle className="sr-only">Menu</DialogTitle>
+          <DialogTitle className="sr-only"><Menuu></Menuu></DialogTitle>
           <div className="mb-5">
             <Logo />
           </div>
