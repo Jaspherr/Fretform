@@ -134,7 +134,7 @@ export function ChordEverywhere({ rootPc: initialRoot = 7, keyPicker }: { rootPc
           <Switch checked={withScale} onChange={setWithScale} label="Show the scale around the shape" />
         </div>
       </div>
-      <Fretboard
+      <Fretboard glide
         marks={marks}
         range={RANGE}
         bands={bands}

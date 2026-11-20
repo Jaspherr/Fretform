@@ -33,7 +33,7 @@ export function RhythmToLeadPage() {
   return (
     <Page>
       <SubNav items={FILL_NAV} />
-      <PageHeader eyebrow="Connect" title={<>Your {symbol} chord is already a lead position</>}>
+      <PageHeader eyebrow="Changes" title={<>Your {symbol} chord is already a lead position</>}>
         Rhythm and lead don’t live in different places. Start with a barre chord you already play and add one layer at a time — the solo position was under your hand all along.
       </PageHeader>
       <Panel>

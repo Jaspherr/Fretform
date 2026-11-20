@@ -7,11 +7,12 @@ import { pcAt, STRINGS_LOW_TO_HIGH } from './fretboard'
 import { identifyChord, identifyFrets, parseFretString } from './identify'
 import { parseInterval } from './intervals'
 import { MODES, parentMajorRoot } from './modes'
-import { displayNote, parseRootPc, pcName, type PitchClass } from './notes'
+import { displayNote, mod12, parseRootPc, pcName, type PitchClass } from './notes'
 import { connectPatterns, nearestPlacement, pentatonicBoxes, threeNpsPatterns } from './patterns'
 import { buildScale, parentMajorSpelling, SCALES } from './scales'
 import { toneNames } from './tones'
-import { connectProgression, triadInversion, triadsInsideVoicing, triadsOnStringSet } from './triads'
+import { connectProgression, nearestTriad, triadInversion, triadQualityOf, triadsInsideVoicing, triadsOnStringSet, voiceMoves } from './triads'
+import { CHALLENGE_KINDS, checkTap, makeChallenge, seededRng } from './challenges'
 import { generateVoicings, VOICING_TEMPLATES, placeTemplate, voicingPcs } from './voicings'
 
 const pc = (name: string) => parseRootPc(name)!
@@ -375,5 +376,54 @@ describe('CAGED across the neck (drives the shape bands)', () => {
     const t = triadsInsideVoicing(e.voicing.frets, 7, 'major').find((x) => x.stringSetId === '123')!
     expect(t.frets).toEqual([4, 3, 3])
     expect(t.inversion).toBe('first')
+  })
+})
+
+describe('voice leading for the neck (home)', () => {
+  it('reduces chord types to their core triad', () => {
+    expect(triadQualityOf('dom7')).toBe('major')
+    expect(triadQualityOf('m7')).toBe('minor')
+    expect(triadQualityOf('m7b5')).toBe('dim')
+    expect(triadQualityOf('sus4')).toBeNull()
+  })
+  it('G → C on strings 1–2–3 moves the hand as little as possible', () => {
+    // G major 1st inversion at frets 4-3-3 (B D G) — inside the E-shape barre at fret 3.
+    const g = triadsOnStringSet(pc('G'), 'major', '123').find((t) => t.frets.join() === '4,3,3')!
+    const c = nearestTriad(g, pc('C'), 'major')!
+    // Nearest C triad: 5-5-3 (C E G): B→C up 1, D→E up 2, G stays.
+    expect(c.frets).toEqual([5, 5, 3])
+    expect(voiceMoves(g, c).map((m) => m.semitones)).toEqual([1, 2, 0])
+    // Whatever the chords, the answer is never further than any other option.
+    for (let r = 0; r < 12; r++)
+      for (const t of triadsOnStringSet(r, 'major', '234')) {
+        const n = nearestTriad(t, mod12(r + 7), 'major')!
+        const cost = (x: number[]) => x.reduce((s, f, i) => s + Math.abs(f - t.frets[i]), 0)
+        for (const o of triadsOnStringSet(mod12(r + 7), 'major', '234')) expect(cost(n.frets)).toBeLessThanOrEqual(cost(o.frets))
+      }
+  })
+})
+
+describe('challenges', () => {
+  it('always have at least one answer, every answer checks out, and wrong taps are explained', () => {
+    for (const kind of CHALLENGE_KINDS)
+      for (let seed = 1; seed <= 40; seed++) {
+        const c = makeChallenge(kind, seededRng(seed))
+        expect(c.answers.length, `${kind} #${seed}: ${c.prompt}`).toBeGreaterThan(0)
+        for (const a of c.answers) {
+          expect(c.correctPcs, `${kind} #${seed}`).toContain(pcAt(a.string, a.fret))
+          expect(checkTap(c, a).correct).toBe(true)
+        }
+        // A tap far outside the answer area is never "correct".
+        expect(checkTap(c, { string: 1, fret: 22 }).correct).toBe(false)
+      }
+  })
+  it('explains what a wrong tap actually is', () => {
+    const c = makeChallenge('find-interval', seededRng(3))
+    const root = c.context.rootPc!
+    const wrong = c.given[0]
+    const r = checkTap(c, wrong)
+    expect(r.correct).toBe(false)
+    expect(r.explanation).toMatch(/root of/)
+    expect(pcAt(wrong.string, wrong.fret)).toBe(root)
   })
 })

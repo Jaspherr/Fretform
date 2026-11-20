@@ -11,6 +11,11 @@ export type MarkTone = IntervalFamily | 'target' | 'plain' | 'selected'
 export type Emphasis = 'strong' | 'normal' | 'soft' | 'ghost'
 
 export interface FretMark extends FretPos {
+  /**
+   * Musical identity (e.g. "voice-2", "third"). Marks with an id keep their dot
+   * between renders and glide to a new fret, so a moving note can be followed.
+   */
+  id?: string
   /** Main text inside the dot */
   label: string
   /** Second line (used when showing notes + intervals) */

@@ -1,9 +1,11 @@
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { LessonDemo } from '@/components/demos'
-import { LessonPanel, Page, PageHeader, Panel } from '@/components/layout/page'
+import { Page, PageHeader, Panel } from '@/components/layout/page'
 import { Button } from '@/components/ui/button'
-import { LESSONS, getLesson } from '@/content/lessons'
+import { Challenge } from '@/components/Challenge'
+import { LESSONS, type LessonTool, getLesson } from '@/content/lessons'
+import type { ChallengeKind } from '@/theory/challenges'
 import { NotFound } from './Reference'
 
 export function LearnIndex() {
@@ -33,6 +35,30 @@ export function LearnIndex() {
   )
 }
 
+/** Which "find it yourself" challenge closes each lesson. */
+const CHALLENGE_FOR: Record<LessonTool, ChallengeKind> = {
+  notes: 'find-note',
+  intervals: 'find-interval',
+  'chords-everywhere': 'octave',
+  triads: 'find-interval',
+  caged: 'octave',
+  'scale-overlay': 'scale-tone',
+  'chord-tones': 'shared',
+  fills: 'target',
+  'rhythm-to-lead': 'scale-tone',
+}
+
+function StageLabel({ n, label, text }: { n: number; label: string; text?: string }) {
+  return (
+    <div className="mb-3 mt-10 flex flex-wrap items-baseline gap-x-3 gap-y-1 first-of-type:mt-0">
+      <span className="text-[13px] font-semibold text-muted">
+        {n} · {label}
+      </span>
+      {text && <span className="text-[15px] text-ink-soft">{text}</span>}
+    </div>
+  )
+}
+
 export function LessonPage() {
   const { slug } = useParams()
   const lesson = getLesson(slug)
@@ -48,10 +74,28 @@ export function LessonPage() {
       <PageHeader eyebrow={lesson.step === '★' ? 'Bonus step' : `Step ${lesson.step}`} title={lesson.title}>
         {lesson.summary}
       </PageHeader>
+      <StageLabel n={1} label="Explore" text={lesson.seeing} />
       <Panel>
         <LessonDemo tool={lesson.tool} />
       </Panel>
-      <LessonPanel className="mt-6" seeing={lesson.seeing} matters={lesson.matters} find={lesson.find} tryThis={lesson.tryThis} />
+      <StageLabel n={2} label="Understand" />
+      <dl className="grid gap-x-10 gap-y-6 sm:grid-cols-2">
+        {[
+          ['Why it matters', lesson.matters],
+          ['How to find it', lesson.find],
+        ].map(([k, v]) => (
+          <div key={k} className="border-l-2 border-line-strong pl-4">
+            <dt className="mb-1 text-[14px] font-semibold text-ink">{k}</dt>
+            <dd className="prose-note text-[15.5px]">{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <StageLabel n={3} label="Apply" text="Find it yourself. Each tap tells you what you hit and why it is (or isn’t) the answer." />
+      <Challenge kind={CHALLENGE_FOR[lesson.tool]} title={`Your turn — ${lesson.title.toLowerCase()}`} />
+      <p className="prose-note mt-4 max-w-[68ch] border-l-2 border-ink pl-4 text-[16px]">
+        <b className="font-sans text-[14px] text-ink">On your guitar: </b>
+        {lesson.tryThis}
+      </p>
       <div className="mt-6">
         <Button asChild variant="primary">
           <Link to={lesson.toolLink.to}>

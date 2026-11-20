@@ -5,7 +5,7 @@ import { Fretboard } from '@/components/fretboard/Fretboard'
 import { IntervalBadge, NoteBadge } from '@/components/fretboard/Legend'
 import { cycleOwner, mergeMarks, mutedStringsOf, positionMarks, toneMarks, voicingPositions } from '@/components/fretboard/marks'
 import { SubNav } from '@/components/layout/AppShell'
-import { ControlBar, LessonPanel, NextSteps, Page, PageHeader, Panel, SectionTitle, TheoryCard, ToolLink } from '@/components/layout/page'
+import { ControlBar, LessonPanel, NextSteps, Page, PageHeader, Panel, SectionTitle, TheoryCard, ToolLink, OnTheNeck } from '@/components/layout/page'
 import { CHORD_NAV } from '@/components/layout/sections'
 import { Button } from '@/components/ui/button'
 import { Segmented } from '@/components/ui/segmented'
@@ -171,7 +171,7 @@ export function ChordsPage() {
   return (
     <Page>
       <SubNav items={CHORD_NAV} />
-      <PageHeader eyebrow="Explore" title={<>{longName} <span className="text-muted">({symbol})</span></>}>
+      <PageHeader eyebrow="Chords" actions={<OnTheNeck rootPc={rootPc} quality={qualityId} step="shape" label={`Follow ${symbol} on the neck`} />} title={<>{longName} <span className="text-muted">({symbol})</span></>}>
         Every shape is the same few notes stacked a different way. Tap a note on the neck, or pick a shape below, to see where it sits among all the {symbol} notes.
       </PageHeader>
       <Panel>
@@ -202,7 +202,7 @@ export function ChordsPage() {
           </div>
         </div>
         <div className="mt-4">
-          <Fretboard
+          <Fretboard glide
             marks={marks}
             mutedStrings={selected?.kind === 'voicing' ? mutedStringsOf(selected.frets) : undefined}
             region={selected ? { start: selected.minFret, end: selected.maxFret } : null}
@@ -296,7 +296,7 @@ export function ElsewherePage() {
   return (
     <Page>
       <SubNav items={CHORD_NAV} />
-      <PageHeader eyebrow="Explore" title={<>Where else can I play {symbol}?</>}>
+      <PageHeader eyebrow="Chords" title={<>Where else can I play {symbol}?</>}>
         You probably know {symbol} as {familiar ? <b className="font-semibold text-ink">{familiar.title.toLowerCase()} {familiar.minFret === 0 ? 'in open position' : `at fret ${familiar.minFret}`}</b> : 'one shape'}. Pick a part of the neck and here’s every practical {symbol} that lives there.
       </PageHeader>
       <Panel>
@@ -308,7 +308,7 @@ export function ElsewherePage() {
           <FretRangeSelector value={regionId} onChange={(r) => { setRegionId(r); setSelectedId(null) }} label="Neck area" />
         </ControlBar>
         <div className="mt-2">
-          <Fretboard
+          <Fretboard glide
             bands={bands}
             onBandSelect={setSelectedId}
             onSelect={(p) => setSelectedId(pickShapeAt(all, p, selectedShapeId))}

@@ -50,7 +50,7 @@ function ResultCard({ m, selected, onSelect, rank }: { m: ChordMatch; selected: 
         <span
           className={cn(
             'shrink-0 rounded-full px-2 py-0.5 text-[12.5px] font-semibold',
-            rank === 0 ? 'bg-ink text-bg' : m.kind === 'ambiguous' ? 'bg-surface-2 text-muted' : 'bg-accent-soft text-accent',
+            rank === 0 ? 'bg-accent text-on-accent' : m.kind === 'ambiguous' ? 'bg-surface-2 text-muted' : 'bg-accent-soft text-accent',
           )}
         >
           {rank === 0 ? 'Most likely' : MATCH_KIND_LABEL[m.kind]}

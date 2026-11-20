@@ -112,6 +112,49 @@ export function triadsInsideVoicing(
   )
 }
 
+/** The three-note core of a chord quality: G7 and Gmaj7 sit on a G major triad. */
+export function triadQualityOf(qualityId: string): 'major' | 'minor' | 'dim' | 'aug' | null {
+  if (['major', 'dom7', 'maj7', '6', 'add9', '9', 'maj9'].includes(qualityId)) return 'major'
+  if (['minor', 'm7', 'm6', 'madd9', 'm9', 'mmaj7'].includes(qualityId)) return 'minor'
+  if (qualityId === 'dim' || qualityId === 'm7b5' || qualityId === 'dim7') return 'dim'
+  if (qualityId === 'aug') return 'aug'
+  return null
+}
+
+/**
+ * The triad of the next chord, on the same strings, that the hand can reach
+ * with the smallest total movement — the voice-leading answer to "where does
+ * each finger go?". Ties go to the shape closest in position.
+ */
+export function nearestTriad(from: TriadVoicing, rootPc: PitchClass, qualityId: string): TriadVoicing | null {
+  const q = triadQualityOf(qualityId)
+  if (!q) return null
+  const options = triadsOnStringSet(rootPc, q, from.stringSetId)
+  let best: TriadVoicing | null = null
+  let bestCost = Infinity
+  for (const o of options) {
+    const cost = o.frets.reduce((s, f, i) => s + Math.abs(f - from.frets[i]), 0) + Math.abs(o.center - from.center) * 0.01
+    if (cost < bestCost) {
+      best = o
+      bestCost = cost
+    }
+  }
+  return best
+}
+
+export interface VoiceMove {
+  string: StringNum
+  fromFret: number
+  toFret: number
+  /** Semitones the voice moves (positive = up) */
+  semitones: number
+}
+
+/** How each string's note moves from one triad to the next (same string set). */
+export function voiceMoves(from: TriadVoicing, to: TriadVoicing): VoiceMove[] {
+  return from.strings.map((s, i) => ({ string: s, fromFret: from.frets[i], toFret: to.frets[i], semitones: to.frets[i] - from.frets[i] }))
+}
+
 export interface ProgressionStep {
   rootPc: PitchClass
   qualityId: string

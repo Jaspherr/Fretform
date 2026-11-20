@@ -12,15 +12,16 @@ Interactive fretboard guide for intermediate guitarists. Core idea: **see the fr
 
 ## Architecture rules
 
-- `src/theory/` is pure TypeScript, no React. Pitch classes internally; spelling is a layer on top (`notes.ts`). Chords/scales are formula data; playable shapes are tested movable templates (`voicings.ts`). Any theory change needs a test in `theory.test.ts`.
+- `src/theory/` is pure TypeScript, no React. Pitch classes internally; spelling is a layer on top (`notes.ts`). Chords/scales are formula data; playable shapes are tested movable templates (`voicings.ts`). Any theory change needs a test in `theory.test.ts`. Lesson challenges come from `theory/challenges.ts` (generated, never a stored answer key).
 - **One fretboard.** `components/fretboard/Fretboard.tsx` renders `FretMark[]` and knows nothing about music. Pages build marks with helpers in `marks.ts` (`toneMarks`, `positionMarks`, `mergeMarks`).
   - `emphasis`: `strong`/`normal` = filled, `soft` = outlined in role colour (still labelled — never fade to unreadable), `ghost` = small unlabelled ring.
   - `bands` = clickable shape blocks above the neck, positioned from the neck's own geometry (never draw a separate linear "map" — it won't line up with tapered frets).
   - `onSelect` makes notes tappable; prefer direct manipulation on the neck over extra form controls.
   - The legend is generated from the marks unless a page passes `legend={…}` / `legend={false}`.
   - Notes/Intervals/Both toggle lives on the neck (global pref), not in page controls.
-- **Note-role visual language** (`glyph.tsx`): root = square, 3rd = circle, 5th = hexagon, 7th = diamond, other tones = small circle, next-chord target = dashed teal ring, shared/stays-put = solid ink ring. Shape + text always accompany colour. Chord boxes and legends reuse the same glyphs.
-- **Colour is reserved for music.** UI chrome is monochrome ink on paper (`--accent` = ink). Don't add decorative colour, gradients, or all-caps labels. Tokens live in `src/index.css` (light `:root`, dark `.dark`).
+- **Note-role visual language** (`glyph.tsx`): root = square, 3rd = circle, 5th = hexagon, 7th = diamond, other tones = small neutral-grey circle, next-chord target = dashed bluish-green ring, shared/stays-put = solid ink ring. Shape + text always accompany colour. Chord boxes and legends reuse the same glyphs. Colours are the Okabe–Ito colour-blind-safe palette (tokens in `index.css`); colour appears only on notes. Filled notes get a dark outline (`--note-edge`) so light colours keep a visible edge on white.
+- **Motion explains.** Give a mark an `id` (a voice, a string) and it glides to its new fret instead of popping (`.fret-pos` in `index.css`). Use it where following a note teaches something (shape changes, voice leading); reduced motion turns it off. Pages where one shape changes can pass `glide` to `<Fretboard>` instead of hand-writing ids (foreground notes get per-string identities).
+- **Colour is reserved for music** — except the single indigo accent for interface state. Don't add other interface colours. Don't add decorative colour, gradients, or all-caps labels. Tokens live in `src/index.css` (light `:root`, dark `.dark`). Colour system "Instrument Slate" (all in `src/index.css`, OKLCH): one cool slate neutral for surfaces and text (never pure white/black); **one interface accent** (indigo, `--accent`/`--on-accent`) for actions, active nav, selection, focus and the selected neck region — never on a note; feedback (`--success`/`--warning`/`--error`) always paired with an icon and words. The board uses `--neck*` tokens; text and hollow notes on it use `--neck-ink` / `--neck-hollow`.
 - Type: Archivo (UI, condensed headings), Source Serif 4 for explanatory prose (`.prose-note`).
 
 ## State
@@ -31,6 +32,6 @@ Interactive fretboard guide for intermediate guitarists. Core idea: **see the fr
 
 ## Information architecture
 
-Top nav is grouped by intention in `components/layout/sections.ts`: **Explore** (Fretboard, Chords, Scales) · **Connect** (Triads, CAGED, Fills) · **Learn** (Path, Reference). Sections with several tools use `SubNav`. Controls are phrased as questions ("Which chord?", "What do you want to see?"); secondary options go in `MoreOptions`. End tools with `NextSteps` (phrased as the player's next question).
+Top nav is grouped by what the player is working on in `components/layout/sections.ts`: **Play** (the neck, home) · **Chords** (Chords, Triads) · **Scales** (Scales, CAGED) · **Changes** (Fills and friends) · **Learn** (Path, Reference). The home page is **the neck** (`components/atlas/Atlas.tsx`): one chord, five questions (notes → shape → triad → scale → next chord), each a layer on the same fretboard, state in the URL (`chord`, `q`, `step`, `at`, `to`). Tools are where you go deeper; every step links to one. Sections with several tools use `SubNav`. Controls are phrased as questions ("Which chord?", "What do you want to see?"); secondary options go in `MoreOptions`. End tools with `NextSteps` (phrased as the player's next question). Main tools also link back to the neck with `OnTheNeck` (`layout/page.tsx`) in the header, at the matching step.
 
 The six journeys the product must keep answering are linked from the home page (`pages/Home.tsx` `QUESTIONS`) and covered in `e2e/journeys.spec.ts` — keep both in sync when routes or params change.

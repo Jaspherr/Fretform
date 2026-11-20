@@ -121,8 +121,8 @@ export const LESSONS: Lesson[] = [
     toolLink: { to: '/fills', label: 'Open the Fill Navigator' },
     seeing: 'The notes around your current chord, sorted into safe notes, passing notes and target notes for the next chord.',
     matters: 'A fill is just a short walk from the chord you’re on to the chord you’re going to. Knowing the landing note is most of the work.',
-    find: 'Dashed teal rings mark notes from the next chord. Walk toward one and land on it as the chord changes.',
-    tryThis: 'Strum G for three beats, then play a three-note fill into C that lands on a teal note.',
+    find: 'Dashed green rings mark notes from the next chord. Walk toward one and land on it as the chord changes.',
+    tryThis: 'Strum G for three beats, then play a three-note fill into C that lands on a green note.',
   },
   {
     slug: 'rhythm-to-lead',

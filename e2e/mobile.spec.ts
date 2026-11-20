@@ -5,7 +5,7 @@ test.describe('mobile', () => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Open menu' }).click()
     const dialog = page.getByRole('dialog')
-    for (const group of ['Explore', 'Connect', 'Learn']) await expect(dialog.getByRole('heading', { name: group })).toBeVisible()
+    for (const group of ['Play', 'Chords', 'Scales', 'Changes', 'Learn']) await expect(dialog.getByRole('heading', { name: group })).toBeVisible()
     await dialog.getByRole('link', { name: /^Triads/ }).click()
     await expect(page).toHaveURL(/\/triads$/)
     await expect(dialog).toBeHidden()
@@ -37,6 +37,7 @@ test.describe('mobile', () => {
       '/fills/rhythm-to-lead?key=G&shape=E',
       '/learn/know-the-notes',
       '/reference/intervals',
+      '/?step=move',
     ]) {
       await page.goto(url)
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
@@ -45,9 +46,11 @@ test.describe('mobile', () => {
     }
   })
 
-  test('home hero is usable by touch', async ({ page }) => {
+  test('the neck is usable by touch', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('button', { name: 'E shape, frets 3 to 5' }).tap()
-    await expect(page.getByText('E shape at fret 3.')).toBeVisible()
+    await page.getByRole('navigation', { name: 'Questions about this chord' }).getByRole('button', { name: /Where can I grab it/ }).tap()
+    await expect(page.getByText(/E shape at fret 3/)).toBeVisible()
+    await page.getByRole('button', { name: 'Next shape up the neck' }).tap()
+    await expect(page).toHaveURL(/at=/)
   })
 })

@@ -1,11 +1,12 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { Button } from '@/components/ui/button'
 import { Field, FretRangeSelector, RootSelector } from '@/components/controls'
 import { Tab } from '@/components/diagrams/Tab'
 import { Fretboard } from '@/components/fretboard/Fretboard'
 import { INTERVAL_LEGEND, Legend, NoteBadge } from '@/components/fretboard/Legend'
 import { type FretMark, describeTone, labelTone, toneMarks } from '@/components/fretboard/marks'
 import { SubNav } from '@/components/layout/AppShell'
-import { ControlBar, LessonPanel, MoreOptions, Page, PageHeader, Panel, SectionTitle, Tip, ToolLink } from '@/components/layout/page'
+import { ControlBar, LessonPanel, MoreOptions, Page, PageHeader, Panel, SectionTitle, Tip, ToolLink, OnTheNeck } from '@/components/layout/page'
 import { FILL_NAV } from '@/components/layout/sections'
 import { Segmented } from '@/components/ui/segmented'
 import { usePrefs } from '@/lib/prefs'
@@ -50,22 +51,47 @@ const FILL_KIND_INFO: Record<FillKind, { title: string; text: string }> = {
 }
 
 function FillCard({ fill, curRoot, nextRoot, curTones, nextTones, keyNames }: { fill: FillExample; curRoot: string; nextRoot: string; curTones: Map<number, Tone>; nextTones: Set<number>; keyNames: (pc: number) => string }) {
-  const marks: FretMark[] = fill.notes.map((n, i) => ({
-    string: n.string,
-    fret: n.fret,
-    label: String(i + 1),
-    tone: curTones.get(n.pc)?.family ?? (nextTones.has(n.pc) ? 'target' : 'plain'),
-    ring: nextTones.has(n.pc) && i === fill.notes.length - 1 ? 'target' : undefined,
-    emphasis: 'strong',
-    info: `Note ${i + 1}: ${keyNames(n.pc)}`,
-  }))
+  // Step through: one "finger" glides from note to note; played notes stay as a trail.
+  const [step, setStep] = useState<number | null>(null)
+  const last = fill.notes.length - 1
+  const jobOf = (pc: number, i: number) =>
+    curTones.has(pc)
+      ? `a ${curRoot} chord tone (safe)`
+      : nextTones.has(pc)
+        ? i === last
+          ? `a ${nextRoot} chord tone — the landing note`
+          : `a ${nextRoot} chord tone`
+        : 'a passing note in the key'
+  const marks: FretMark[] = fill.notes.map((n, i) => {
+    const base: FretMark = {
+      string: n.string,
+      fret: n.fret,
+      label: String(i + 1),
+      tone: curTones.get(n.pc)?.family ?? (nextTones.has(n.pc) ? 'target' : 'plain'),
+      ring: nextTones.has(n.pc) && i === last ? 'target' : undefined,
+      emphasis: 'strong',
+      info: `Note ${i + 1}: ${keyNames(n.pc)} — ${jobOf(n.pc, i)}`,
+    }
+    if (step === null) return base
+    if (i === step) return { ...base, id: 'finger' }
+    return { ...base, emphasis: i < step ? 'soft' : 'ghost', ring: undefined }
+  })
   const lo = Math.max(0, Math.min(...fill.notes.map((n) => n.fret)) - 1)
   const info = FILL_KIND_INFO[fill.kind]
+  const cur = step === null ? null : fill.notes[step]
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5">
       <h3 className="font-semibold text-xl">{info.title}</h3>
       <p className="text-[14px] text-ink-soft">{info.text}</p>
       <Fretboard marks={marks} legend={false} range={{ start: lo, end: Math.min(22, lo + 6) }} size="sm" ariaLabel={`${info.title} example`} hint="Follow the numbers. Tap a dot to see which note it is." />
+      <div className="flex flex-wrap items-center gap-2">
+        <Button size="sm" variant={step === null ? 'outline' : 'primary'} onClick={() => setStep(step === null ? 0 : step >= last ? null : step + 1)} aria-label={step === null ? `Step through the ${info.title.toLowerCase()}` : step >= last ? 'Show the whole fill' : 'Next note'}>
+          {step === null ? 'Step through' : step >= last ? 'Show all' : 'Next note'}
+        </Button>
+        <span className="text-[13.5px] text-ink-soft" aria-live="polite">
+          {cur ? `Note ${step! + 1} of ${last + 1}: ${keyNames(cur.pc)} — ${jobOf(cur.pc, step!)}` : ''}
+        </span>
+      </div>
       <Tab notes={fill.notes} label={`${info.title} tab`} />
       <p className="text-[13px] text-muted">
         {fill.notes.map((n) => keyNames(n.pc)).join(' → ')} · {fill.how} ({curRoot} → {nextRoot})
@@ -124,7 +150,7 @@ export function FillsPage() {
   return (
     <Page>
       <SubNav items={FILL_NAV} />
-      <PageHeader eyebrow="Connect" title={<>Fill the gap: {pretty(cur.symbol)} → {pretty(nxt.symbol)}</>}>
+      <PageHeader eyebrow="Changes" actions={<OnTheNeck rootPc={cur.rootPc} quality={cur.qualityId} step="move" label="Watch the voices move on the neck" />} title={<>Fill the gap: {pretty(cur.symbol)} → {pretty(nxt.symbol)}</>}>
         What can you play between two chords without moving your hand? Every note under your hand gets a job: safe (this chord), target (the next chord) or passing (the key in between).
       </PageHeader>
       <Panel>
@@ -179,7 +205,7 @@ export function FillsPage() {
       </Panel>
 
       <SectionTitle sub="Three ways to fill the gap, built from the notes above. They’re deliberately simple — the point is where the notes come from, not the lick.">Fill types</SectionTitle>
-      <Tip id="fill-numbers">In the examples, dots are numbered in playing order. Coloured shapes are notes of the current chord, teal is a note of the next chord, outlined is a passing note.</Tip>
+      <Tip id="fill-numbers">In the examples, dots are numbered in playing order. Coloured shapes are notes of the current chord, green is a note of the next chord, outlined is a passing note.</Tip>
       {fills.length === 0 ? (
         <p className="rounded-xl border border-dashed border-line-strong p-6 text-ink-soft">This fret area is too tight for an example on the top strings. Try a different area.</p>
       ) : (
@@ -194,8 +220,8 @@ export function FillsPage() {
       <LessonPanel
         seeing={`Every note in frets ${range.start}–${range.end}, sorted by job for the change ${pretty(cur.symbol)} → ${pretty(nxt.symbol)}.`}
         matters="A fill doesn’t need to be fast or flashy. Two or three notes that leave the chord and land on the next one make a rhythm part sound arranged."
-        find="Look for a passing note that sits one fret or one scale step from a teal target. That’s your approach note."
-        tryThis={<>Strum {pretty(cur.symbol)} for three beats. On beat four, play two notes that end on a teal target, then strum {pretty(nxt.symbol)}. See which notes belong to which chord on the <ToolLink to={`/fills/chord-tones?key=${rootSlug(keyPc)}`}>chord tones page</ToolLink>.</>}
+        find="Look for a passing note that sits one fret or one scale step from a green target. That’s your approach note."
+        tryThis={<>Strum {pretty(cur.symbol)} for three beats. On beat four, play two notes that end on a green target, then strum {pretty(nxt.symbol)}. See which notes belong to which chord on the <ToolLink to={`/fills/chord-tones?key=${rootSlug(keyPc)}`}>chord tones page</ToolLink>.</>}
       />
     </Page>
   )
@@ -232,7 +258,7 @@ export function ChordTonesPage() {
   return (
     <Page>
       <SubNav items={FILL_NAV} />
-      <PageHeader eyebrow="Chord tones" title="See the chord inside the scale">
+      <PageHeader eyebrow="Changes" title="See the chord inside the scale">
         The key stays the same; only the highlighted notes change from chord to chord. Those highlighted notes are where your lines should land.
       </PageHeader>
       <Panel>

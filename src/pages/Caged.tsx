@@ -4,7 +4,7 @@ import { Field, RootSelector } from '@/components/controls'
 import { ChordDiagram } from '@/components/diagrams/ChordDiagram'
 import { Fretboard } from '@/components/fretboard/Fretboard'
 import { type FretMark, mergeMarks, mutedStringsOf, positionMarks, toneMarks, voicingPositions } from '@/components/fretboard/marks'
-import { ControlBar, LessonPanel, MoreOptions, NextSteps, Page, PageHeader, Panel, SectionTitle } from '@/components/layout/page'
+import { ControlBar, LessonPanel, MoreOptions, NextSteps, Page, PageHeader, Panel, SectionTitle, OnTheNeck } from '@/components/layout/page'
 import { Button } from '@/components/ui/button'
 import { Segmented } from '@/components/ui/segmented'
 import { usePrefs } from '@/lib/prefs'
@@ -135,7 +135,7 @@ export function CagedPage() {
 
   return (
     <Page>
-      <PageHeader eyebrow="Connect" title={<>CAGED in {symbol}</>}>
+      <PageHeader eyebrow="Scales · CAGED" actions={<OnTheNeck rootPc={keyPc} quality={quality} step="scale" label="One shape at a time, on the neck" />} title={<>CAGED in {symbol}</>}>
         Five chord shapes you already know — C, A, G, E, D — tile the whole neck in that order. Each one overlaps the next, so the neck is one map, not five boxes.
       </PageHeader>
       <Panel>
@@ -207,7 +207,7 @@ export function CagedPage() {
             </Button>
           </div>
         </div>
-        <Fretboard
+        <Fretboard glide
           marks={marks}
           bands={bands}
           onBandSelect={(id) => select(current && placementId(current) === id ? null : (placements.find((p) => placementId(p) === id) ?? null))}

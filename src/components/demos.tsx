@@ -53,7 +53,7 @@ function IntervalsDemo() {
           <Segmented label="Chord" size="sm" value={q} onChange={setQ} options={[{ value: 'major', label: 'G (1 3 5)' }, { value: 'minor', label: 'Gm (1 ♭3 5)' }, { value: 'dom7', label: 'G7 (1 3 5 ♭7)' }]} />
         </Field>
       </div>
-      <Fretboard marks={marks} range={{ start: 0, end: 8 }} mutedStrings={mutedStringsOf(frets)} ariaLabel="E-shape G chord with intervals" />
+      <Fretboard glide marks={marks} range={{ start: 0, end: 8 }} mutedStrings={mutedStringsOf(frets)} ariaLabel="E-shape G chord with intervals" />
       <p className="mt-2 text-[13.5px] text-muted">Switch between G and Gm: only the blue 3rd (circle) moves, by one fret. Switch to G7: one root becomes a ♭7.</p>
     </div>
   )
@@ -82,7 +82,7 @@ function TriadsDemo() {
           />
         </Field>
       </div>
-      <Fretboard marks={marks} highlightStrings={getStringSet(set)!.strings} ariaLabel="C major triads" />
+      <Fretboard glide marks={marks} highlightStrings={getStringSet(set)!.strings} ariaLabel="C major triads" />
     </div>
   )
 }
@@ -116,7 +116,7 @@ function CagedDemo({ withScale }: { withScale?: boolean }) {
           </Field>
         )}
       </div>
-      <Fretboard marks={marks} region={{ start: p.regionStart, end: p.regionEnd }} regionLabel={`${shape} shape`} mutedStrings={mutedStringsOf(p.voicing.frets)} ariaLabel={`${rootName} major, ${shape} shape`} />
+      <Fretboard glide marks={marks} region={{ start: p.regionStart, end: p.regionEnd }} regionLabel={`${shape} shape`} mutedStrings={mutedStringsOf(p.voicing.frets)} ariaLabel={`${rootName} major, ${shape} shape`} />
     </div>
   )
 }
@@ -185,7 +185,7 @@ function RhythmLeadDemo() {
             aria-pressed={active.includes(l.id)}
             className={
               'cursor-pointer rounded-full border px-3 py-1 text-[13px] font-medium ' +
-              (active.includes(l.id) ? 'border-ink bg-ink text-bg' : 'border-line-strong bg-surface text-ink-soft hover:text-ink')
+              (active.includes(l.id) ? 'border-accent bg-accent text-on-accent' : 'border-line-strong bg-surface text-ink-soft hover:text-ink')
             }
           >
             {l.label}

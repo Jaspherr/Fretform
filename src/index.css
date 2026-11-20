@@ -3,92 +3,145 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * Neckline is an annotated fretboard notebook: cool chart paper, navy ink.
- * Rule: the interface chrome is monochrome ink. Colour is reserved for music —
- * if something is coloured, it is telling you what a note does.
+ * Neckline colour system — "Instrument Slate"
+ *
+ * Three layers, each with one job:
+ * 1. Foundation: one cool slate neutral (OKLCH hue ≈ 265) for every surface and
+ *    every line of text, defined in OKLCH, which is built to predict perceived
+ *    lightness, chroma and hue (Ottosson, "A perceptual color space for image
+ *    processing"), so equal lightness steps look about equal. Steps are even,
+ *    never pure white or pure black, so neither theme glares.
+ * 2. Interface accent: a single deep indigo (hue ≈ 278) for actions, navigation,
+ *    selection and focus. It sits in the hue gap between the blue 3rds (≈ 240°) and
+ *    pink-purple 7ths (≈ 350°), and it never appears on a note.
+ * 3. Musical meaning: colours based on the Okabe–Ito palette (Color Universal
+ *    Design), adjusted for contrast, used only for notes and always paired with
+ *    a shape and a label. Separation is checked by simulating protanopia,
+ *    deuteranopia and tritanopia (Machado, Oliveira & Fernandes, 2009), not assumed.
+ * Contrast targets follow WCAG 2.2: 4.5:1 for text (note labels are small, so the
+ * large-text 3:1 never applies), 3:1 for notes and controls against what is next
+ * to them — a dark outline can provide that edge (SC 1.4.11).
+ * Feedback states (success / warning / error) always come with an icon and words.
  */
 :root {
-  /* Paper & ink */
-  --bg: #f3f4f1;
-  --surface: #fbfbf9;
-  --surface-2: #e8eae6;
-  --ink: #18202b;
-  --ink-soft: #3c4652;
-  --muted: #5f6a74;
-  --line: #d7dcdc;
-  --line-strong: #b4bcbf;
-  --accent: var(--ink);
-  --accent-soft: #e2e6e8;
-  --focus: #1f6fd1;
+  /* Foundation */
+  --bg: oklch(0.972 0.005 265); /* canvas */
+  --surface: oklch(0.99 0.003 265); /* panels, cards */
+  --surface-elevated: oklch(0.995 0.002 265); /* dialogs, popovers */
+  --surface-2: oklch(0.94 0.008 265); /* interactive wells: toggles, tabs */
+  --ink: oklch(0.25 0.025 268); /* primary text */
+  --ink-soft: oklch(0.38 0.022 268); /* secondary text */
+  --muted: oklch(0.5 0.02 268); /* hints, captions */
+  --line: oklch(0.9 0.008 265);
+  --line-strong: oklch(0.8 0.012 265);
+  --overlay: oklch(0.25 0.025 268 / 0.4);
+  --disabled: oklch(0.7 0.01 265);
 
-  /* Note roles — used on and off the fretboard */
-  --iv-root: #c8322b;
-  --iv-third: #2d78b0;
-  --iv-fifth: #c9921a;
-  --iv-seventh: #7652b8;
-  --iv-other: #4c7a5a;
-  --target: #0f8c74;
-  /* Text on top of a filled note */
+  /* Interface accent */
+  --accent: oklch(0.45 0.16 278);
+  --accent-hover: oklch(0.4 0.16 278);
+  --on-accent: oklch(0.985 0.005 278);
+  --accent-soft: oklch(0.93 0.03 278);
+  --focus: oklch(0.55 0.18 278);
+  --select: oklch(0.93 0.03 278);
+
+  /* Feedback — never colour alone: always an icon and a label */
+  --success: oklch(0.5 0.12 155);
+  --warning: oklch(0.55 0.13 70);
+  --error: oklch(0.52 0.17 25);
+
+  /* Musical meaning — Okabe–Ito, deepened where needed so labels pass WCAG AA */
+  --iv-root: #b84f00;
+  --iv-third: #0072b2;
+  --iv-fifth: #e69f00;
+  --iv-seventh: #cc79a7;
+  --iv-other: oklch(0.84 0.008 265); /* light grey, kept apart from the 7th and the target under colour blindness; outlined on the board */
+  --target: #1d9e78; /* lighter than the blue 3rd, so they stay apart under tritanopia */
   --on-root: #ffffff;
   --on-third: #ffffff;
-  --on-fifth: #18202b;
-  --on-seventh: #ffffff;
-  --on-other: #ffffff;
-  --on-target: #ffffff;
-  --select: #e8eae6;
-  /* Outlined (scale-only / background) notes */
-  --note-hollow: #fbfbf9;
-  --note-hollow-ink: #3c4652;
+  --on-fifth: #1f2230;
+  --on-seventh: #1f2230;
+  --on-other: #1f2230;
+  --on-target: #1f2230;
+  --note-hollow: var(--surface);
+  --note-hollow-ink: var(--ink-soft);
 
-  /* The neck, drawn in ink on paper */
-  --neck: #e6e9e5;
-  --fret-wire: #a3acb0;
-  --nut: #18202b;
-  --string: #6b767f;
-  --string-hi: #18202b;
-  --inlay: #cdd3d3;
-  --region: rgba(31, 111, 209, 0.07);
-  --region-line: rgba(31, 111, 209, 0.45);
+  /* The fretboard: a light board one step above the canvas, slate strings */
+  --neck: oklch(0.995 0.002 265);
+  --neck-binding: oklch(0.25 0.025 268);
+  --fret-wire: oklch(0.76 0.012 265);
+  --nut: oklch(0.25 0.025 268);
+  --string: oklch(0.46 0.02 265);
+  --string-hi: oklch(0.25 0.025 268);
+  --inlay: oklch(0.88 0.008 265);
+  --neck-hollow: oklch(0.995 0.002 265);
+  --neck-ink: oklch(0.25 0.025 268);
+  --neck-ink-soft: oklch(0.45 0.02 265);
+  --neck-hover: oklch(0.25 0.025 268 / 0.35);
+  --note-edge: oklch(0.25 0.025 268 / 0.7);
+  /* Selected region: a whisper of the interface accent — it's a UI selection, not a note */
+  --region: oklch(0.45 0.16 278 / 0.05);
+  --region-line: oklch(0.45 0.16 278 / 0.45);
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Notes travelling to a new position: quick start, soft landing */
+  --ease-move: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-move: 460ms;
 }
 
 .dark {
-  --bg: #11161d;
-  --surface: #171e27;
-  --surface-2: #202a35;
-  --ink: #e6e9e4;
-  --ink-soft: #bcc4c7;
-  --muted: #8d989f;
-  --line: #29323d;
-  --line-strong: #3d4855;
-  --accent-soft: #233041;
-  --focus: #6aa9f2;
-  --select: #2a3542;
+  --bg: oklch(0.205 0.018 265);
+  --surface: oklch(0.235 0.018 265);
+  --surface-elevated: oklch(0.27 0.02 265);
+  --surface-2: oklch(0.28 0.02 265);
+  --ink: oklch(0.94 0.008 265);
+  --ink-soft: oklch(0.82 0.012 265);
+  --muted: oklch(0.7 0.015 265);
+  --line: oklch(0.31 0.018 265);
+  --line-strong: oklch(0.42 0.02 265);
+  --overlay: oklch(0.1 0.01 265 / 0.6);
+  --disabled: oklch(0.45 0.015 265);
 
-  --iv-root: #e5594a;
-  --iv-third: #55a0d6;
-  --iv-fifth: #dcab3c;
-  --iv-seventh: #a085e0;
-  --iv-other: #74a885;
-  --target: #34b394;
-  --on-root: #11161d;
-  --on-third: #11161d;
-  --on-fifth: #11161d;
-  --on-seventh: #11161d;
-  --on-other: #11161d;
-  --on-target: #11161d;
-  --note-hollow: #1b232d;
-  --note-hollow-ink: #c9d0d3;
+  --accent: oklch(0.74 0.12 278);
+  --accent-hover: oklch(0.79 0.11 278);
+  --on-accent: oklch(0.2 0.03 278);
+  --accent-soft: oklch(0.31 0.06 278);
+  --focus: oklch(0.76 0.13 278);
+  --select: oklch(0.31 0.06 278);
 
-  --neck: #1b232d;
-  --fret-wire: #475360;
-  --nut: #d5dad6;
-  --string: #7f8b94;
-  --string-hi: #e6e9e4;
-  --inlay: #2a3440;
-  --region: rgba(106, 169, 242, 0.08);
-  --region-line: rgba(106, 169, 242, 0.5);
+  --success: oklch(0.74 0.12 155);
+  --warning: oklch(0.8 0.12 75);
+  --error: oklch(0.72 0.15 25);
+
+  /* Okabe–Ito, lighter members so they read on dark */
+  --iv-root: #e0702a;
+  --iv-third: #56b4e9;
+  --iv-fifth: #e69f00;
+  --iv-seventh: #d48cb4;
+  --iv-other: oklch(0.84 0.008 265); /* light, so it never merges with the green target under red-green colour blindness */
+  --target: #2bb48c;
+  --on-root: #1a1d28;
+  --on-third: #1a1d28;
+  --on-fifth: #1a1d28;
+  --on-seventh: #1a1d28;
+  --on-other: #1a1d28;
+  --on-target: #1a1d28;
+
+  /* The fretboard sits slightly below the page, like an instrument panel */
+  --neck: oklch(0.17 0.015 265);
+  --neck-binding: oklch(0.9 0.006 265);
+  --fret-wire: oklch(0.42 0.014 265);
+  --nut: oklch(0.9 0.006 265);
+  --string: oklch(0.72 0.012 265);
+  --string-hi: oklch(0.94 0.008 265);
+  --inlay: oklch(0.28 0.016 265);
+  --neck-hollow: oklch(0.17 0.015 265);
+  --neck-ink: oklch(0.94 0.008 265);
+  --neck-ink-soft: oklch(0.74 0.012 265);
+  --neck-hover: oklch(0.94 0.008 265 / 0.4);
+  --note-edge: oklch(0.1 0.01 265 / 0.55);
+  --region: oklch(0.74 0.12 278 / 0.07);
+  --region-line: oklch(0.74 0.12 278 / 0.5);
 }
 
 @theme inline {
@@ -106,6 +159,13 @@
   --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-disabled: var(--disabled);
   --color-focus: var(--focus);
   --color-root: var(--iv-root);
   --color-third: var(--iv-third);
@@ -114,6 +174,7 @@
   --color-other: var(--iv-other);
   --color-target: var(--target);
   --color-neck: var(--neck);
+  --color-neck-ink: var(--neck-ink);
 }
 
 @layer base {
@@ -125,6 +186,9 @@
     -webkit-tap-highlight-color: transparent;
   }
   body {
+    transition:
+      background-color 280ms ease,
+      color 280ms ease;
     @apply font-sans text-[15px] leading-relaxed;
     background: var(--bg);
     min-height: 100dvh;
@@ -160,23 +224,29 @@
  * filled ↔ outlined changes cross-fade, so you can see which notes stayed put
  * when you switch shape, inversion or layer.
  */
+/* A note that has an identity (a voice, a chord tone) glides to its new fret,
+ * so you can follow it when the shape, inversion or chord changes. */
+.fret-pos {
+  transition: transform var(--dur-move) var(--ease-move);
+}
 .fret-dot {
   transition: opacity 180ms var(--ease-out);
 }
 .fret-dot > :is(circle, rect, polygon) {
   transition:
-    fill 180ms ease,
-    stroke 180ms ease;
+    fill 220ms ease,
+    stroke 220ms ease,
+    r 220ms var(--ease-out);
 }
 .fret-dot-enter {
-  animation: dot-in 200ms var(--ease-out) both;
+  animation: dot-in 240ms var(--ease-out) both;
   transform-box: fill-box;
   transform-origin: center;
 }
 @keyframes dot-in {
   from {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.6);
   }
 }
 .fade-in {
@@ -213,6 +283,9 @@
   }
   :is(button, .band, [role='radio']):active {
     transform: none;
+  }
+  .fret-pos {
+    transition: none;
   }
   .fret-dot-enter {
     animation: dot-fade 160ms ease both !important;

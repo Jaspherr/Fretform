@@ -7,26 +7,52 @@ import { expect, test } from '@playwright/test'
 test.describe('desktop journeys', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop only')
 
-  test('navigation is grouped by intention and reaches every tool', async ({ page }) => {
+  test('navigation is grouped by what you are working on and reaches every tool', async ({ page }) => {
     await page.goto('/')
     const nav = page.getByRole('navigation', { name: 'Main' })
-    for (const group of ['Explore', 'Connect', 'Learn']) await expect(nav.getByRole('list', { name: group })).toBeVisible()
+    for (const group of ['Play', 'Chords', 'Scales', 'Changes', 'Learn']) await expect(nav.getByRole('list', { name: group })).toBeVisible()
     await nav.getByRole('link', { name: 'CAGED' }).click()
     await expect(page).toHaveURL(/\/caged$/)
     await expect(page.getByRole('heading', { level: 1 })).toContainText('CAGED in')
     await nav.getByRole('link', { name: 'Triads' }).click()
     await expect(page.getByRole('heading', { level: 1 })).toContainText('triads on strings')
+    await nav.getByRole('link', { name: 'The neck' }).click()
+    await expect(page).toHaveURL(/:4173\/$/)
   })
 
-  test('home hero: tapping a shape reveals the triad inside it', async ({ page }) => {
+  test('the neck: one chord, five questions, each a layer on the same fretboard', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('button', { name: 'E shape, frets 3 to 5' }).click()
-    await expect(page.getByRole('button', { name: 'E shape, frets 3 to 5' })).toHaveAttribute('aria-pressed', 'true')
-    await expect(page.getByText('E shape at fret 3.')).toBeVisible()
-    await expect(page.getByText(/G triad .* hiding inside it/)).toBeVisible()
-    // Change key: the shapes recompute.
-    await page.getByRole('radio', { name: 'C', exact: true }).click()
-    await expect(page.getByRole('button', { name: /C shape, frets 0 to 3/ })).toBeVisible()
+    const steps = page.getByRole('navigation', { name: 'Questions about this chord' })
+    await expect(page.getByText(/G is G – B – D/)).toBeVisible()
+    // Tap a note: jump to a shape that uses it.
+    await page.getByRole('button', { name: 'Next: Where can I grab it?' }).click()
+    await expect(page).toHaveURL(/step=shape/)
+    await expect(page.getByText(/E shape at fret 3/)).toBeVisible()
+    await page.getByRole('button', { name: 'Next shape up the neck' }).click()
+    await expect(page).toHaveURL(/at=/)
+    await page.getByRole('button', { name: 'Previous shape down the neck' }).click()
+    await steps.getByRole('button', { name: 'What’s the core of the shape?' }).click()
+    await expect(page.getByText(/strings 1–2–3 hold just B, D, G — a major triad in 1st inversion/)).toBeVisible()
+    await steps.getByRole('button', { name: 'Where can it go next?' }).click()
+    await page.getByRole('button', { name: 'Move to C' }).click()
+    await expect(page.getByText('B moves up 1 fret to C; D moves up 2 frets to E; G stays — it’s in both chords')).toBeVisible()
+    await page.getByRole('link', { name: /Go deeper: Fill the gap G → C/ }).click()
+    await expect(page).toHaveURL(/\/fills\?key=G&from=1&to=4/)
+    // Change key from the deep link: everything recomputes in the new key.
+    await page.goto('/?chord=C&q=minor&step=triad')
+    await expect(page.getByText(/minor triad/)).toBeVisible()
+  })
+
+  test('a lesson ends with a challenge that explains every tap', async ({ page }) => {
+    await page.goto('/learn/know-the-intervals')
+    const ch = page.getByRole('region', { name: /Your turn/ })
+    await expect(ch.getByText(/Find the (3rd|♭3rd|5th) of/)).toBeVisible()
+    // Tap one of the given roots: it is explained, and it is not the answer.
+    await ch.getByRole('button', { name: 'Another one' }).click()
+    await ch.getByRole('group').first().focus()
+    await page.keyboard.press('ArrowRight')
+    await page.keyboard.press('Enter')
+    await expect(ch.getByRole('status')).not.toBeEmpty()
   })
 
   test('alternative chord: "I know G here, where else can I play it?"', async ({ page }) => {

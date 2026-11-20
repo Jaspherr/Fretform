@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { usePrefs } from '@/lib/prefs'
 import { cn } from '@/lib/utils'
+import { rootSlug } from '@/theory/notes'
 
 export function Page({ children, className }: { children: ReactNode; className?: string }) {
   return <div className={cn('mx-auto w-full max-w-[1320px] px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8', className)}>{children}</div>
@@ -22,10 +23,13 @@ export function PageHeader({ eyebrow, title, children, actions }: { eyebrow?: st
   )
 }
 
-/** The workspace surface a neck sits on. */
+/**
+ * The workspace a neck sits on. No card: the ebony neck carries the weight, so
+ * a section is just a rule and some room — the same as the home page.
+ */
 export function Panel({ children, className, title, aside }: { children: ReactNode; className?: string; title?: ReactNode; aside?: ReactNode }) {
   return (
-    <section className={cn('rounded-lg border border-line bg-surface p-3 sm:p-5', className)}>
+    <section className={cn('border-t border-line pt-5 sm:pt-6', className)}>
       {(title || aside) && (
         <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
           {title && <h2 className="text-xl text-ink">{title}</h2>}
@@ -148,5 +152,22 @@ export function NextSteps({ items }: { items: { to: string; q: string; a: string
         ))}
       </ul>
     </nav>
+  )
+}
+
+const NECK_QUALITIES = ['major', 'minor', 'dom7', 'maj7', 'm7']
+
+/**
+ * Back to the neck: open the home instrument on the same chord, at the question
+ * this tool goes deeper on. Every tool is a detour from there, not an island.
+ */
+export function OnTheNeck({ rootPc, quality, step, label }: { rootPc: number; quality: string; step: 'notes' | 'shape' | 'triad' | 'scale' | 'move'; label: string }) {
+  const q = NECK_QUALITIES.includes(quality) ? quality : quality === 'dim' || quality === 'm7b5' ? 'minor' : 'major'
+  const to = `/?chord=${rootSlug(rootPc)}${q === 'major' ? '' : `&q=${q}`}&step=${step}`
+  return (
+    <Link to={to} className="inline-flex items-center gap-1.5 rounded-md border border-line-strong px-3 py-1.5 text-[13.5px] font-medium text-ink hover:border-ink">
+      <span aria-hidden="true" className="inline-block size-2.5 rounded-[3px] bg-[var(--neck)]" />
+      {label}
+    </Link>
   )
 }

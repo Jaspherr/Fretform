@@ -78,7 +78,7 @@ export function ModesPage() {
   return (
     <Page>
       <SubNav items={SCALE_NAV} />
-      <PageHeader eyebrow="Modes" title="Modes made visual">
+      <PageHeader eyebrow="Scales · Modes" title="Modes made visual">
         A mode is a familiar scale with one or two notes changed. Instead of seven new patterns, see exactly which note moves and why it changes the sound.
       </PageHeader>
       <Panel>

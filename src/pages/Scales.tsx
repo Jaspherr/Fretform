@@ -115,7 +115,7 @@ export function ScalesPage() {
   return (
     <Page>
       <SubNav items={SCALE_NAV} />
-      <PageHeader eyebrow="Explore" title={name}>
+      <PageHeader eyebrow="Scales" title={name}>
         {view === 'full' ? 'Every note of the scale on the whole neck. Switch views to break it into positions you can play without shifting.' : 'One position in front, the rest of the scale faded behind it — so you can see where this position sits in the whole.'}
       </PageHeader>
       <Panel>
@@ -127,7 +127,7 @@ export function ScalesPage() {
           </Field>
         </ControlBar>
         <div className="mt-2">
-          <Fretboard
+          <Fretboard glide
             marks={marks}
             region={region}
             bands={patterns.map((p, i) => ({
@@ -262,7 +262,7 @@ export function ConnectPage() {
         <Tip id="connect-boxes">
           Solid notes belong to box {from + 1}, outlined notes to box {to + 1}. The ringed notes belong to <b>both</b> — when you reach one, you can keep going in either box.
         </Tip>
-        <Fretboard legend={false} marks={marks} range={range} region={{ start: b.minFret, end: b.maxFret }} regionLabel={`Box ${to + 1}`} ariaLabel={`${rootName} ${scale.def.name}, box ${from + 1} to box ${to + 1}`} />
+        <Fretboard glide legend={false} marks={marks} range={range} region={{ start: b.minFret, end: b.maxFret }} regionLabel={`Box ${to + 1}`} ariaLabel={`${rootName} ${scale.def.name}, box ${from + 1} to box ${to + 1}`} />
         <Legend
           className="mt-2"
           items={[

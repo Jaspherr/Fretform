@@ -13,10 +13,10 @@ export function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2 rounded-md" aria-label={`${BRAND.name} home`}>
       <svg viewBox="0 0 32 32" className="size-7" aria-hidden="true">
-        <rect x="1" y="1" width="30" height="30" rx="5" fill="var(--neck)" stroke="var(--ink)" strokeWidth="1.5" />
-        <path d="M12 5v22M21 5v22" stroke="var(--fret-wire)" strokeWidth="1.4" />
-        <path d="M5 9h22M5 16h22M5 23h22" stroke="var(--string)" strokeWidth="1" />
-        <rect x="12.5" y="12.5" width="7" height="7" rx="1.8" fill="var(--iv-root)" />
+        <rect x="1" y="1" width="30" height="30" rx="7" fill="var(--accent)" />
+        <path d="M12 5v22M21 5v22" stroke="var(--on-accent)" strokeOpacity="0.45" strokeWidth="1.4" />
+        <path d="M5 9h22M5 16h22M5 23h22" stroke="var(--on-accent)" strokeOpacity="0.8" strokeWidth="1" />
+        <rect x="12.5" y="12.5" width="7" height="7" rx="1.8" fill="var(--on-accent)" />
       </svg>
       <span className="text-[18px] font-bold tracking-tight text-ink" style={{ fontStretch: '85%' }}>
         {BRAND.name}
@@ -67,12 +67,12 @@ export function AppShell() {
                 <ul aria-label={g.label} className="flex items-center">
                   {g.items.map((n) => (
                     <li key={n.to}>
-                      <NavLink
+                      <NavLink end={n.end}
                         to={n.to}
                         className={({ isActive }) =>
                           cn(
                             'relative block rounded-md px-2.5 py-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink',
-                            isActive && 'text-ink after:absolute after:inset-x-2.5 after:-bottom-[11px] after:h-[2px] after:bg-ink',
+                            isActive && 'text-ink after:absolute after:inset-x-2.5 after:-bottom-[11px] after:h-[2px] after:bg-accent',
                           )
                         }
                       >
@@ -116,7 +116,7 @@ export function AppShell() {
                 <ul>
                   {g.items.map((n) => (
                     <li key={n.to}>
-                      <NavLink
+                      <NavLink end={n.end}
                         to={n.to}
                         onClick={() => setMenuOpen(false)}
                         className={({ isActive }) => cn('block rounded-md px-3 py-2 hover:bg-surface-2', isActive && 'bg-surface-2')}
@@ -146,7 +146,7 @@ export function AppShell() {
           <p className="max-w-sm">
             <span className="font-semibold text-ink">{BRAND.name}</span>. {BRAND.tagline} Standard tuning, 22 frets, everything worked out in your browser.
           </p>
-          <nav aria-label="Footer" className="grid grid-cols-3 gap-x-10 gap-y-1">
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-10 gap-y-4 sm:grid-cols-5">
             {NAV_GROUPS.map((g) => (
               <ul key={g.id} aria-label={g.label} className="flex flex-col gap-1">
                 <li className="font-semibold text-ink-soft">{g.label}</li>

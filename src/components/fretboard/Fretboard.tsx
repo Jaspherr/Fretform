@@ -47,6 +47,11 @@ export interface FretboardProps {
   bands?: FretBand[]
   onBandSelect?: (id: string) => void
   ariaLabel: string
+  /**
+   * Foreground notes travel to their new frets when the marks change (one note
+   * per string per shape works best: chord shapes, triads, boxes).
+   */
+  glide?: boolean
   size?: 'md' | 'sm'
   className?: string
   /** Hide the inspector line under the neck */
@@ -129,7 +134,10 @@ const Neck = memo(function Neck({ g, range, leftHanded, highlightStrings }: { g:
   const dense = range.end - range.start > 12
   return (
     <g aria-hidden="true">
-      <rect x={woodLeft} y={top - 12} width={woodRight - woodLeft} height={bottom - top + 24} rx={2} style={{ fill: 'var(--neck)' }} />
+      <rect x={woodLeft} y={top - 12} width={woodRight - woodLeft} height={bottom - top + 24} rx={3} style={{ fill: 'var(--neck)' }} />
+      {/* Bone binding along both edges of the board */}
+      <line x1={woodLeft} x2={woodRight} y1={top - 11.5} y2={top - 11.5} strokeWidth={1.4} style={{ stroke: 'var(--neck-binding)', opacity: 0.55 }} />
+      <line x1={woodLeft} x2={woodRight} y1={bottom + 11.5} y2={bottom + 11.5} strokeWidth={1.4} style={{ stroke: 'var(--neck-binding)', opacity: 0.55 }} />
       {g.frets
         .filter((f) => f > 0 && (SINGLE_MARKERS.includes(f) || DOUBLE_MARKERS.includes(f)))
         .map((f) =>
@@ -163,7 +171,7 @@ const Neck = memo(function Neck({ g, range, leftHanded, highlightStrings }: { g:
             y1={g.y(s.num)}
             y2={g.y(s.num)}
             strokeWidth={0.7 + (s.num - 1) * 0.3}
-            style={{ stroke: bright ? 'var(--string-hi)' : 'var(--string)', opacity: dim ? 0.3 : 0.85 }}
+            style={{ stroke: bright ? 'var(--string-hi)' : 'var(--string)', opacity: dim ? 0.28 : 0.9 }}
           />
         )
       })}
@@ -199,38 +207,58 @@ const Dot = memo(function Dot({ m, g, rootEmphasis }: { m: FretMark; g: Geometry
   let r = ghost ? 7 : DOT_R + (two ? 1.5 : 0) + (emph === 'strong' ? 0.8 : 0)
   if (isRoot && rootEmphasis && !ghost && !hollow) r += 0.6
   const color = FILL[m.tone]
+  // On the dark neck: ghosts are rings in the wood, outlined notes are dark with a coloured edge.
   const shapeStyle = ghost
-    ? { fill: 'var(--neck)', stroke: m.tone === 'plain' ? 'var(--string)' : color, strokeWidth: 1.4, opacity: 0.85 }
+    ? { fill: 'var(--neck)', stroke: m.tone === 'plain' ? 'var(--neck-ink-soft)' : color, strokeWidth: 1.5, opacity: 0.9 }
     : hollow
-      ? { fill: 'var(--note-hollow)', stroke: m.tone === 'plain' ? 'var(--note-hollow-ink)' : color, strokeWidth: m.tone === 'plain' ? 1.2 : 2 }
-      : { fill: color, stroke: isRoot && rootEmphasis ? 'var(--ink)' : 'rgba(0,0,0,0.18)', strokeWidth: isRoot && rootEmphasis ? 1.6 : 1 }
-  const ink = hollow ? (m.tone === 'plain' ? 'var(--note-hollow-ink)' : 'var(--ink)') : ON_FILL[m.tone]
+      ? { fill: 'var(--neck-hollow)', stroke: m.tone === 'plain' ? 'var(--neck-ink-soft)' : color, strokeWidth: m.tone === 'plain' ? 1.3 : 2.2 }
+      : { fill: color, stroke: isRoot && rootEmphasis ? 'var(--neck-ink)' : 'var(--note-edge)', strokeWidth: isRoot && rootEmphasis ? 1.6 : 1 }
+  const ink = hollow ? (m.tone === 'plain' ? 'var(--neck-ink-soft)' : 'var(--neck-ink)') : ON_FILL[m.tone]
   const fontSize = m.label.length > 2 ? 9.5 : two ? 10 : 11.5
   const ringR = glyphRadius(SHAPE[m.tone], r) + 4.5
+  // Drawn at the origin and moved into place, so a note with a stable key can glide to a new fret.
   return (
-    <g className="fret-dot fret-dot-enter" data-tone={m.tone} data-emphasis={emph}>
-      {m.ring === 'target' && <circle cx={cx} cy={cy} r={ringR} fill="none" strokeWidth={2} strokeDasharray="3.2 2.6" style={{ stroke: 'var(--target)' }} />}
-      {m.ring === 'shared' && <circle cx={cx} cy={cy} r={ringR} fill="none" strokeWidth={2} style={{ stroke: 'var(--ink)' }} />}
-      {m.ring === 'char' && <circle cx={cx} cy={cy} r={ringR} fill="none" strokeWidth={3} style={{ stroke: 'var(--ink)' }} />}
-      {m.ring === 'selected' && <circle cx={cx} cy={cy} r={ringR} fill="none" strokeWidth={2} style={{ stroke: 'var(--focus)' }} />}
-      <Glyph tone={m.tone} cx={cx} cy={cy} r={r} style={shapeStyle} />
-      {ghost ? null : two ? (
-        <>
-          <text x={cx} y={cy - 1.5} textAnchor="middle" style={{ fill: ink, fontSize: 10, fontWeight: 700 }}>
+    <g className="fret-pos" style={{ transform: `translate(${cx}px, ${cy}px)` }}>
+      <g className="fret-dot fret-dot-enter" data-tone={m.tone} data-emphasis={emph}>
+        {m.ring === 'target' && <circle r={ringR} fill="none" strokeWidth={2} strokeDasharray="3.2 2.6" style={{ stroke: 'var(--target)' }} />}
+        {m.ring === 'shared' && <circle r={ringR} fill="none" strokeWidth={2} style={{ stroke: 'var(--neck-ink)' }} />}
+        {m.ring === 'char' && <circle r={ringR} fill="none" strokeWidth={3} style={{ stroke: 'var(--neck-ink)' }} />}
+        {m.ring === 'selected' && <circle r={ringR} fill="none" strokeWidth={2} style={{ stroke: 'var(--focus)' }} />}
+        <Glyph tone={m.tone} cx={0} cy={0} r={r} style={shapeStyle} />
+        {ghost ? null : two ? (
+          <>
+            <text y={-1.5} textAnchor="middle" style={{ fill: ink, fontSize: 10, fontWeight: 700 }}>
+              {m.label}
+            </text>
+            <text y={8.5} textAnchor="middle" style={{ fill: ink, fontSize: 8.5, fontWeight: 550, opacity: 0.9 }}>
+              {m.sub}
+            </text>
+          </>
+        ) : (
+          <text y={fontSize * 0.36} textAnchor="middle" style={{ fill: ink, fontSize, fontWeight: 700 }}>
             {m.label}
           </text>
-          <text x={cx} y={cy + 8.5} textAnchor="middle" style={{ fill: ink, fontSize: 8.5, fontWeight: 550, opacity: 0.9 }}>
-            {m.sub}
-          </text>
-        </>
-      ) : (
-        <text x={cx} y={cy + fontSize * 0.36} textAnchor="middle" style={{ fill: ink, fontSize, fontWeight: 700 }}>
-          {m.label}
-        </text>
-      )}
+        )}
+      </g>
     </g>
   )
 })
+
+/**
+ * Give foreground notes an identity by string ("the 2nd note on the G string"),
+ * so when a shape, box or inversion changes each finger's note travels to its new
+ * fret instead of popping. Background (soft/ghost) notes stay keyed by place.
+ */
+export function withGlide(marks: FretMark[]): FretMark[] {
+  const perString = new Map<number, FretMark[]>()
+  for (const m of marks) {
+    if (m.id || m.emphasis === 'ghost' || m.emphasis === 'soft') continue
+    perString.set(m.string, [...(perString.get(m.string) ?? []), m])
+  }
+  const ids = new Map<FretMark, string>()
+  for (const [s, ms] of perString) ms.sort((a, b) => a.fret - b.fret).forEach((m, k) => ids.set(m, `glide-${s}-${k}`))
+  return marks.map((m) => (ids.has(m) ? { ...m, id: ids.get(m) } : m))
+}
 
 const Dots = memo(function Dots({ marks, g, rootEmphasis }: { marks: FretMark[]; g: Geometry; rootEmphasis: boolean }) {
   // Ghosts first so real notes always paint on top.
@@ -238,7 +266,8 @@ const Dots = memo(function Dots({ marks, g, rootEmphasis }: { marks: FretMark[];
   return (
     <g pointerEvents="none">
       {sorted.map((m) => (
-        <Dot key={`${m.string}:${m.fret}`} m={m} g={g} rootEmphasis={rootEmphasis} />
+        // A mark with an identity keeps its element and travels; others are keyed by place.
+        <Dot key={m.id ?? `${m.string}:${m.fret}`} m={m} g={g} rootEmphasis={rootEmphasis} />
       ))}
     </g>
   )
@@ -269,7 +298,7 @@ function Bands({ bands, g, onSelect }: { bands: FretBand[]; g: Geometry; onSelec
             aria-label={band.description ?? band.label}
             className={cn(
               'band absolute flex h-[26px] cursor-pointer items-center justify-center rounded-[5px] border text-[13px] font-semibold',
-              band.active ? 'z-10 border-ink bg-ink text-bg' : 'border-line-strong bg-surface text-ink-soft hover:border-ink hover:text-ink',
+              band.active ? 'z-10 border-accent bg-accent text-on-accent' : 'border-line-strong bg-surface text-ink-soft hover:border-ink hover:text-ink',
             )}
             style={{ left: `${(x1 / g.width) * 100}%`, width: `${((x2 - x1) / g.width) * 100}%`, top: row * 30 }}
           >
@@ -322,6 +351,7 @@ export const Fretboard = memo(function Fretboard({
   hint,
   legend,
   labelToggle = size !== 'sm',
+  glide,
 }: FretboardProps) {
   const { leftHanded, rootEmphasis, accidentals } = usePrefs()
   // Key on the numbers, not the object: callers often pass a fresh `range` each render.
@@ -339,7 +369,10 @@ export const Fretboard = memo(function Fretboard({
     return m
   }, [marks])
 
-  const visibleMarks = useMemo(() => marks.filter((m) => m.fret >= rangeStart && m.fret <= rangeEnd), [marks, rangeStart, rangeEnd])
+  const visibleMarks = useMemo(() => {
+    const inRange = marks.filter((m) => m.fret >= rangeStart && m.fret <= rangeEnd)
+    return glide ? withGlide(inRange) : inRange
+  }, [marks, rangeStart, rangeEnd, glide])
   const legendItems = useMemo(() => (legend === false ? [] : (legend ?? legendFromMarks(visibleMarks))), [legend, visibleMarks])
 
   // On narrow screens the neck scrolls: bring the region of interest into view when it changes.
@@ -489,7 +522,7 @@ export const Fretboard = memo(function Fretboard({
                 rx={5}
                 fill="none"
                 strokeWidth={shown === cursor ? 2 : 1.2}
-                style={{ stroke: shown === cursor ? 'var(--focus)' : 'var(--line-strong)' }}
+                style={{ stroke: shown === cursor ? 'var(--focus)' : 'var(--neck-hover)' }}
               />
             )}
           </svg>

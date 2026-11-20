@@ -6,7 +6,7 @@ import { Fretboard } from '@/components/fretboard/Fretboard'
 import { INTERVAL_LEGEND, Legend, NoteBadge } from '@/components/fretboard/Legend'
 import { cycleOwner, mergeMarks, mutedStringsOf, positionMarks, rangeAround, voicingPositions } from '@/components/fretboard/marks'
 import { SubNav } from '@/components/layout/AppShell'
-import { ControlBar, LessonPanel, NextSteps, Page, PageHeader, Panel, SectionTitle } from '@/components/layout/page'
+import { ControlBar, LessonPanel, NextSteps, Page, PageHeader, Panel, SectionTitle, OnTheNeck } from '@/components/layout/page'
 import { TRIAD_NAV } from '@/components/layout/sections'
 import { Button } from '@/components/ui/button'
 import { Segmented } from '@/components/ui/segmented'
@@ -97,7 +97,7 @@ function FullChordToTriad({ rootPc, quality }: { rootPc: number; quality: 'major
       </ControlBar>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_260px]">
         <div>
-          <Fretboard
+          <Fretboard glide
             marks={marks}
             range={rangeAround(voicingPositions(voicing.frets), 2, 6)}
             mutedStrings={mutedStringsOf(voicing.frets)}
@@ -201,7 +201,7 @@ export function TriadsPage() {
   return (
     <Page>
       <SubNav items={TRIAD_NAV} />
-      <PageHeader eyebrow="Connect" title={<>{symbol} triads on strings {set.label}</>}>
+      <PageHeader eyebrow="Chords · Triads" actions={<OnTheNeck rootPc={rootPc} quality={quality} step="triad" label="See the triad inside a shape" />} title={<>{symbol} triads on strings {set.label}</>}>
         A triad is just the chord’s three notes, once each. On any three neighbouring strings there are three shapes — one per inversion — that leapfrog up the neck and repeat every 12 frets.
       </PageHeader>
       <Panel>
@@ -246,7 +246,7 @@ export function TriadsPage() {
             </Button>
           </div>
         </div>
-        <Fretboard
+        <Fretboard glide
           marks={marks}
           highlightStrings={set.strings}
           bands={bands}
@@ -341,7 +341,7 @@ export function ProgressionsPage() {
   return (
     <Page>
       <SubNav items={TRIAD_NAV} />
-      <PageHeader eyebrow="Triads" title="Move through a progression with triads">
+      <PageHeader eyebrow="Changes · Triads" title="Move through a progression with triads">
         Instead of jumping between big shapes, pick the nearest triad for each chord. Your hand barely moves, notes that two chords share stay put, and the rest move by a fret or two.
       </PageHeader>
       <Panel>
@@ -403,7 +403,7 @@ export function ProgressionsPage() {
             </Button>
           </div>
         </div>
-        <Fretboard legend={false} marks={marks} range={range} highlightStrings={set.strings} ariaLabel={`${chords[current].symbol} triad, moving to ${chords[(current + 1) % chords.length].symbol}`} />
+        <Fretboard glide legend={false} marks={marks} range={range} highlightStrings={set.strings} ariaLabel={`${chords[current].symbol} triad, moving to ${chords[(current + 1) % chords.length].symbol}`} />
         <Legend
           className="mt-2"
           items={[...INTERVAL_LEGEND.slice(0, 3), { tone: 'other', label: 'Next chord', ring: 'target', soft: true }, { tone: 'root', label: 'Stays put', ring: 'shared' }]}

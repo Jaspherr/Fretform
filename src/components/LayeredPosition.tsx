@@ -73,7 +73,7 @@ export function LayeredPosition({
   const symbol = pretty(chordSymbol(keyPc, chord.quality, accidentals))
   return (
     <div>
-      <Fretboard legend={false}
+      <Fretboard glide legend={false}
         marks={marks}
         range={{ start: Math.max(0, pos.regionStart - 1), end: Math.min(22, pos.regionEnd + 2) }}
         region={on('fill') && fillRange ? fillRange : { start: pos.regionStart, end: pos.regionEnd }}

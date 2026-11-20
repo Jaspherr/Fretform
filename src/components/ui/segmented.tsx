@@ -38,7 +38,7 @@ export function Segmented<T extends string>({
           value={o.value}
           title={o.title}
           className={cn(
-            'shrink-0 cursor-pointer rounded-[4px] font-medium text-ink-soft transition-colors hover:text-ink data-[state=on]:bg-surface data-[state=on]:text-ink data-[state=on]:shadow-[0_0_0_1px_var(--ink-soft)]',
+            'shrink-0 cursor-pointer rounded-[4px] font-medium text-ink-soft transition-colors hover:text-ink data-[state=on]:bg-surface data-[state=on]:text-ink data-[state=on]:shadow-[0_0_0_1.5px_var(--accent)]',
             size === 'sm' ? 'h-7 px-2.5 text-[12.5px]' : 'h-8 px-3 text-[13.5px]',
           )}
         >
@@ -76,7 +76,7 @@ export function ChipToggles<T extends string>({
           key={o.value}
           value={o.value}
           title={o.title}
-          className="h-8 min-w-9 cursor-pointer rounded-full border border-line-strong bg-surface px-3 text-[13px] font-medium text-ink-soft transition-colors hover:text-ink data-[state=on]:border-ink data-[state=on]:bg-ink data-[state=on]:text-bg"
+          className="h-8 min-w-9 cursor-pointer rounded-full border border-line-strong bg-surface px-3 text-[13px] font-medium text-ink-soft transition-colors hover:text-ink data-[state=on]:border-accent data-[state=on]:bg-accent data-[state=on]:text-on-accent"
         >
           {o.label}
         </ToggleGroup.Item>
