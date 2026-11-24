@@ -1,4 +1,4 @@
-# Neckline — working notes
+# Fretform — working notes
 
 Interactive fretboard guide for intermediate guitarists. Core idea: **see the fretboard, not just the shape** — every tool should show how a thing you already know (a chord shape, a box) connects to the rest of the neck.
 

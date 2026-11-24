@@ -3,7 +3,7 @@
  * swapped without touching the rest of the app.
  */
 export const BRAND = {
-  name: 'Neckline',
+  name: 'Fretform',
   tagline: 'See the fretboard, not just the shape.',
-  storagePrefix: 'neckline',
+  storagePrefix: 'fretform',
 } as const

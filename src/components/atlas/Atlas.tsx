@@ -18,7 +18,7 @@ import { INVERSION_LABELS, nearestTriad, triadQualityOf, triadsInsideVoicing, tr
 import { generateVoicings, type Voicing } from '@/theory/voicings'
 
 /**
- * The Neck — Neckline's starting point. One chord, one fretboard, five questions
+ * The Neck — Fretform's starting point. One chord, one fretboard, five questions
  * answered one layer at a time. Everything shown comes from the theory engine;
  * notes with a musical identity glide when the shape or chord changes.
  */

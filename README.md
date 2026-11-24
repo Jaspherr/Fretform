@@ -1,8 +1,8 @@
-# Neckline
+# Fretform
 
 An interactive fretboard guide for guitarists who know the basics but still get lost on the neck. Chords, triads, scales, modes, CAGED and fills — all drawn from one theory engine onto one reusable fretboard.
 
-(“Neckline” is a placeholder name; it lives only in `src/brand.ts`.)
+(The name shown in the app comes from `src/brand.ts`; `index.html` repeats it for the tab title.)
 
 ## How it works
 
