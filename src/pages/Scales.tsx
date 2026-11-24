@@ -50,7 +50,7 @@ function ScaleInfo({ scale }: { scale: Scale }) {
       </TheoryCard>
       {relScale && rel && (
         <TheoryCard label={rel.label} className="md:col-span-1">
-          <Link to={`/scales?root=${rootSlug(relRoot!)}&scale=${rel.scaleId}`} className="font-medium text-accent hover:underline">
+          <Link to={`/scales?root=${rootSlug(relRoot!)}&scale=${rel.scaleId}`} className="font-medium text-accent underline decoration-line-control underline-offset-4 hover:decoration-ink">
             {pretty(displayNote(relScale.tones[0].spelled, accidentals))} {relScale.def.name} →
           </Link>
           <p className="text-[12.5px] text-muted">Same notes, different home.</p>

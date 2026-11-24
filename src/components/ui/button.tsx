@@ -10,9 +10,9 @@ const buttonVariants = cva(
       variant: {
         primary: 'bg-accent text-on-accent hover:bg-accent-hover',
         accent: 'bg-accent text-white hover:bg-accent/90 dark:text-bg',
-        outline: 'border border-line-strong bg-surface text-ink hover:bg-surface-2',
+        outline: 'border border-line-control bg-surface text-ink hover:bg-surface-2',
         ghost: 'text-ink-soft hover:bg-surface-2 hover:text-ink',
-        link: 'text-accent underline-offset-4 hover:underline px-0 h-auto',
+        link: 'text-accent underline decoration-line-control underline-offset-4 hover:decoration-ink px-0 h-auto',
       },
       size: {
         sm: 'h-8 px-3 text-[13px]',

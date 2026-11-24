@@ -73,6 +73,7 @@
   --muted: #666660;
   --line: #e5e5e1;
   --line-strong: #c9c9c3;
+  --line-control: #85857e; /* edges of controls and link underlines: 3:1 */
   --overlay: rgb(20 20 19 / 0.44);
   --disabled: #aaa9a2;
 
@@ -121,7 +122,7 @@
 
   /* Neutral shaded hand region; never confusable with note semantics */
   --region: rgb(37 37 34 / 0.055);
-  --region-line: rgb(37 37 34 / 0.48);
+  --region-line: rgb(37 37 34 / 0.5);
 
   /* Existing timing / movement remain unchanged */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -140,6 +141,7 @@
   --muted: #a1a6ae;
   --line: #2b2e34;
   --line-strong: #454951;
+  --line-control: #747983;
   --overlay: rgb(0 0 0 / 0.72);
   --disabled: #777c85;
 
@@ -199,6 +201,7 @@
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
+  --color-line-control: var(--line-control);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-hover: var(--accent-hover);

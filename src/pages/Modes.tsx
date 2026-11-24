@@ -109,7 +109,7 @@ export function ModesPage() {
         </h2>
         <div className="grid gap-3 md:grid-cols-4">
           <TheoryCard label="Parent major scale">
-            <Link to={`/scales?root=${rootSlug(parentPc)}&scale=major`} className="font-medium text-accent hover:underline">
+            <Link to={`/scales?root=${rootSlug(parentPc)}&scale=major`} className="font-medium text-accent underline decoration-line-control underline-offset-4 hover:decoration-ink">
               {parentName} major
             </Link>
             <p className="text-[12.5px] text-muted">Starting on its {['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'][mode.degree - 1]} note</p>
@@ -124,7 +124,7 @@ export function ModesPage() {
             </div>
           </TheoryCard>
           <TheoryCard label="Home chord">
-            <Link to={`/chords?root=${rootSlug(rootPc)}&quality=${chordQ.id}`} className="font-semibold text-lg text-ink hover:underline">
+            <Link to={`/chords?root=${rootSlug(rootPc)}&quality=${chordQ.id}`} className="font-semibold text-lg text-ink underline decoration-line-control underline-offset-4 hover:decoration-ink">
               {homeChord}
             </Link>
             <p className="text-[12.5px] text-muted">{chordQ.name}</p>

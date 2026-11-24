@@ -185,7 +185,7 @@ function RhythmLeadDemo() {
             aria-pressed={active.includes(l.id)}
             className={
               'cursor-pointer rounded-full border px-3 py-1 text-[13px] font-medium ' +
-              (active.includes(l.id) ? 'border-accent bg-accent text-on-accent' : 'border-line-strong bg-surface text-ink-soft hover:text-ink')
+              (active.includes(l.id) ? 'border-accent bg-accent text-on-accent' : 'border-line-control bg-surface text-ink-soft hover:text-ink')
             }
           >
             {l.label}

@@ -289,7 +289,7 @@ function Bands({ bands, g, onSelect }: { bands: FretBand[]; g: Geometry; onSelec
             aria-label={band.description ?? band.label}
             className={cn(
               'band absolute flex h-[26px] cursor-pointer items-center justify-center rounded-[5px] border text-[13px] font-semibold',
-              band.active ? 'z-10 border-accent bg-accent text-on-accent' : 'border-line-strong bg-surface text-ink-soft hover:border-ink hover:text-ink',
+              band.active ? 'z-10 border-accent bg-accent text-on-accent' : 'border-line-control bg-surface text-ink-soft hover:border-ink hover:text-ink',
             )}
             style={{ left: `${(x1 / g.width) * 100}%`, width: `${((x2 - x1) / g.width) * 100}%`, top: row * 30 }}
           >

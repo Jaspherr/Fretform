@@ -169,7 +169,7 @@ export function IdentifyPage() {
                 <input
                   value={text}
                   onChange={(e) => submitText(e.target.value)}
-                  className="h-11 w-full max-w-sm rounded-lg border border-line-strong bg-surface px-3 font-mono text-lg tracking-widest text-ink outline-none focus:border-ink"
+                  className="h-11 w-full max-w-sm rounded-lg border border-line-control bg-surface px-3 font-mono text-lg tracking-widest text-ink outline-none focus:border-ink"
                   aria-invalid={!!error}
                   aria-describedby="fret-help"
                   spellCheck={false}
@@ -264,7 +264,7 @@ export function IdentifyPage() {
                   <div className="flex items-center gap-4">
                     <ChordDiagram frets={frets} tones={chosen.tones} label={`Shape ${fretsToString(frets)}`} className="max-w-[120px]" />
                     <div className="text-[13.5px] text-ink-soft">
-                      <Link className="font-medium text-accent hover:underline" to={`/chords?root=${rootSlug(chosen.rootPc)}&quality=${chosen.quality.id}`}>
+                      <Link className="font-medium text-accent underline decoration-line-control underline-offset-4 hover:decoration-ink" to={`/chords?root=${rootSlug(chosen.rootPc)}&quality=${chosen.quality.id}`}>
                         All {pretty(chosen.rootName + chosen.quality.symbol)} shapes →
                       </Link>
                     </div>

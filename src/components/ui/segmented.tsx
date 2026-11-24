@@ -75,7 +75,7 @@ export function ChipToggles<T extends string>({
           key={o.value}
           value={o.value}
           title={o.title}
-          className="h-8 min-w-9 cursor-pointer rounded-full border border-line-strong bg-surface px-3 text-[13px] font-medium text-ink-soft transition-colors hover:text-ink data-[state=on]:border-accent data-[state=on]:bg-accent data-[state=on]:text-on-accent"
+          className="h-8 min-w-9 cursor-pointer rounded-full border border-line-control bg-surface px-3 text-[13px] font-medium text-ink-soft transition-colors hover:text-ink data-[state=on]:border-accent data-[state=on]:bg-accent data-[state=on]:text-on-accent"
         >
           {o.label}
         </ToggleGroup.Item>

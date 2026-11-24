@@ -13,7 +13,7 @@ export function Switch({ checked, onChange, label, hint }: { checked: boolean; o
         id={id}
         checked={checked}
         onCheckedChange={onChange}
-        className="relative h-5 w-9 shrink-0 cursor-pointer rounded-full bg-line-strong transition-colors data-[state=checked]:bg-accent"
+        className="relative h-5 w-9 shrink-0 cursor-pointer rounded-full bg-line-control transition-colors data-[state=checked]:bg-accent"
       >
         <SwitchPrimitive.Thumb className="block size-4 translate-x-0.5 rounded-full bg-surface shadow transition-transform data-[state=checked]:translate-x-[18px]" />
       </SwitchPrimitive.Root>

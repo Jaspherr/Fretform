@@ -327,7 +327,7 @@ export function Atlas() {
         </div>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-          <Link to={deeper[step].to} className="text-[14px] font-medium text-ink underline decoration-line-strong decoration-2 underline-offset-4 hover:decoration-ink">
+          <Link to={deeper[step].to} className="text-[14px] font-medium text-ink underline decoration-line-control decoration-2 underline-offset-4 hover:decoration-ink">
             Go deeper: {deeper[step].label}
           </Link>
           {stepIndex < ATLAS_STEPS.length - 1 && (

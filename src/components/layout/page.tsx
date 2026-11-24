@@ -122,7 +122,7 @@ export function Tip({ id, children }: { id: string; children: ReactNode }) {
 
 export function ToolLink({ to, children }: { to: string; children: ReactNode }) {
   return (
-    <Link to={to} className="font-medium text-ink underline decoration-line-strong decoration-2 underline-offset-4 hover:decoration-ink">
+    <Link to={to} className="font-medium text-ink underline decoration-line-control decoration-2 underline-offset-4 hover:decoration-ink">
       {children}
     </Link>
   )
@@ -136,7 +136,7 @@ export function NextSteps({ items }: { items: { to: string; q: string; a: string
         {items.map((l) => (
           <li key={l.to}>
             <Link to={l.to} className="group block">
-              <span className="font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-4 group-hover:decoration-ink">{l.q}</span>
+              <span className="font-semibold text-ink underline decoration-line-control decoration-2 underline-offset-4 group-hover:decoration-ink">{l.q}</span>
               <span className="mt-0.5 block text-[14px] text-muted">{l.a}</span>
             </Link>
           </li>
@@ -156,7 +156,7 @@ export function OnTheNeck({ rootPc, quality, step, label }: { rootPc: number; qu
   const q = NECK_QUALITIES.includes(quality) ? quality : quality === 'dim' || quality === 'm7b5' ? 'minor' : 'major'
   const to = `/?chord=${rootSlug(rootPc)}${q === 'major' ? '' : `&q=${q}`}&step=${step}`
   return (
-    <Link to={to} className="inline-flex items-center gap-1.5 rounded-md border border-line-strong px-3 py-1.5 text-[13.5px] font-medium text-ink hover:border-ink">
+    <Link to={to} className="inline-flex items-center gap-1.5 rounded-md border border-line-control px-3 py-1.5 text-[13.5px] font-medium text-ink hover:border-ink">
       <span aria-hidden="true" className="inline-block size-2.5 rounded-[3px] bg-[var(--neck)]" />
       {label}
     </Link>

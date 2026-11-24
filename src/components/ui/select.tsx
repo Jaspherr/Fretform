@@ -28,7 +28,7 @@ export function Select<T extends string>({
       <SelectPrimitive.Trigger
         aria-label={label}
         className={cn(
-          'inline-flex h-9 min-w-36 cursor-pointer items-center justify-between gap-2 rounded-lg border border-line-strong bg-surface px-3 text-sm font-medium text-ink hover:bg-surface-2',
+          'inline-flex h-9 min-w-36 cursor-pointer items-center justify-between gap-2 rounded-lg border border-line-control bg-surface px-3 text-sm font-medium text-ink hover:bg-surface-2',
           className,
         )}
       >

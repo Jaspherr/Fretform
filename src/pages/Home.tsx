@@ -54,7 +54,7 @@ export function HomePage() {
               <h2 id="path" className="text-[1.75rem] text-ink">
                 Or follow the path, one step at a time
               </h2>
-              <Link to="/learn" className="font-medium text-ink underline decoration-line-strong decoration-2 underline-offset-4 hover:decoration-ink">
+              <Link to="/learn" className="font-medium text-ink underline decoration-line-control decoration-2 underline-offset-4 hover:decoration-ink">
                 See all steps
               </Link>
             </div>
