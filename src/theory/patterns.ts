@@ -24,7 +24,6 @@ export function nPerStringPattern(rootPc: PitchClass, semis: number[], startDegr
   const lowE = openMidi(6)
   const startPc = mod12(rootPc + sorted[startDegree])
   let midi = lowE + mod12(startPc - lowE)
-  // Walk up the scale: degree index and absolute pitch.
   const notes: number[] = []
   let deg = startDegree
   for (let i = 0; i < perString * 6; i++) {
@@ -56,7 +55,6 @@ export function pentatonicBoxes(rootPc: PitchClass, semis: number[]): ScalePatte
   return semis.map((_, i) => nPerStringPattern(rootPc, semis, i, 2))
 }
 
-/** Seven 3-notes-per-string shapes for a 7-note scale. */
 export function threeNpsPatterns(rootPc: PitchClass, semis: number[]): ScalePattern[] {
   return semis.map((_, i) => nPerStringPattern(rootPc, semis, i, 3))
 }

@@ -3,7 +3,6 @@ import { fretsToString } from '@/theory/voicings'
 import type { Tone } from '@/theory/tones'
 import { ChordDiagram } from './ChordDiagram'
 
-/** One playable shape: diagram + where it sits. Selecting it puts it on the big neck. */
 export function VoicingCard({
   title,
   subtitle,
@@ -43,7 +42,7 @@ export function VoicingCard({
         {badge && <span className="shrink-0 rounded-full bg-surface-2 px-2 py-0.5 text-[12.5px] font-semibold text-muted">{badge}</span>}
       </div>
       <ChordDiagram frets={frets} tones={tones} fingers={fingers} showFingers={showFingers} label={`${title}: ${fretsToString(frets)}`} />
-      <code className="font-mono text-[12px] tracking-wider text-ink-soft">{fretsToString(frets)}</code>
+      <code className="font-mono text-[12px] tracking-wide text-ink-soft">{fretsToString(frets)}</code>
     </button>
   )
 }

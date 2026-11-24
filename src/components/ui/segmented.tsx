@@ -49,7 +49,6 @@ export function Segmented<T extends string>({
   )
 }
 
-/** Multi-choice chip row. */
 export function ChipToggles<T extends string>({
   values,
   onChange,

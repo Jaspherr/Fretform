@@ -21,7 +21,7 @@ export function HomePage() {
     <div>
       <div className="mx-auto max-w-[1440px] px-4 pb-14 pt-8 sm:px-6 sm:pt-10 lg:px-8">
         <header className="mb-7 flex flex-wrap items-end justify-between gap-x-10 gap-y-2">
-          <h1 className="text-[2.1rem] leading-[1] text-ink sm:text-[3rem]" style={{ fontStretch: '75%', fontWeight: 720 }}>
+          <h1 className="text-[2rem] leading-[1.04] tracking-[-0.03em] text-ink sm:text-[2.75rem]">
             See the fretboard, not just the shape.
           </h1>
           <p className="prose-note max-w-[44ch] text-[16px]">Pick a chord. Then ask the neck one question at a time — and watch the answer appear where you play.</p>

@@ -9,7 +9,6 @@ export type StringNum = 1 | 2 | 3 | 4 | 5 | 6
 export interface GuitarString {
   num: StringNum
   name: string
-  /** MIDI note number of the open string */
   openMidi: number
 }
 
@@ -57,7 +56,6 @@ export function fretsForPc(s: StringNum, pc: PitchClass, maxFret = NUM_FRETS): n
   return out
 }
 
-/** All positions of the given pitch classes across the neck. */
 export function positionsOf(pcs: Iterable<PitchClass>, range: FretRange = FULL_RANGE): FretPos[] {
   const set = new Set(pcs)
   const out: FretPos[] = []
@@ -76,7 +74,6 @@ export const FULL_RANGE: FretRange = { start: 0, end: NUM_FRETS }
 
 export const inRange = (fret: number, r: FretRange) => fret >= r.start && fret <= r.end
 
-/** Neck regions offered by the position finders. */
 export const NECK_REGIONS = [
   { id: 'all', label: 'Whole neck', range: FULL_RANGE },
   { id: 'open', label: 'Open–5', range: { start: 0, end: 5 } },

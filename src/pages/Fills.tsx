@@ -227,8 +227,6 @@ export function FillsPage() {
   )
 }
 
-/* ---------------------------------------------------------------------------------- */
-
 export function ChordTonesPage() {
   const { labels, accidentals } = usePrefs()
   const [keyPc, setKey] = useRootParam('key', 7)
@@ -295,7 +293,7 @@ export function ChordTonesPage() {
               >
                 <div className="font-mono text-[12px] text-muted">{ch.roman}</div>
                 <div className="font-semibold text-lg text-ink">{pretty(ch.symbol)}</div>
-                <div className="mt-1 text-[12px] text-ink-soft">{tones.map((t) => pretty(displayNote(t.spelled, accidentals))).join(' ')}</div>
+                <div className="mt-1 font-mono text-[12px] text-ink-soft">{tones.map((t) => pretty(displayNote(t.spelled, accidentals))).join(' ')}</div>
               </button>
             )
           })}

@@ -71,7 +71,6 @@ export function Glyph({ tone, cx, cy, r, style }: { tone: MarkTone; cx: number; 
   }
 }
 
-/** Inline swatch for legends and badges: the same glyph the neck draws. */
 export function GlyphSwatch({ tone, hollow, ring, size = 16 }: { tone: MarkTone; hollow?: boolean; ring?: 'target' | 'shared' | 'char'; size?: number }) {
   const c = size / 2
   const r = size * 0.32

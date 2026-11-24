@@ -32,18 +32,14 @@ export interface FretboardProps {
   marks: FretMark[]
   /** Which frets to draw. Fret 0 = the open-string column. */
   range?: FretRange
-  /** Shaded band, e.g. a CAGED region or the selected fret range */
   region?: FretRange | null
   regionLabel?: string
   /** Frets to keep in view when the neck has to scroll (defaults to the region / active band) */
   focus?: FretRange | null
-  /** Brighten these strings, dim the rest */
   highlightStrings?: StringNum[]
   /** Show × at the nut for these strings (chord voicings) */
   mutedStrings?: StringNum[]
-  /** Called when a fret is clicked / activated with Enter or Space */
   onSelect?: (pos: FretPos) => void
-  /** Shape blocks above the neck, aligned to the real fret geometry */
   bands?: FretBand[]
   onBandSelect?: (id: string) => void
   ariaLabel: string
@@ -54,9 +50,7 @@ export interface FretboardProps {
   glide?: boolean
   size?: 'md' | 'sm'
   className?: string
-  /** Hide the inspector line under the neck */
   hideInspector?: boolean
-  /** Prompt shown in the inspector before anything is picked */
   hint?: string
   /** Legend under the neck. Default: built from the marks. `false` hides it. */
   legend?: LegendItem[] | false
@@ -135,7 +129,6 @@ const Neck = memo(function Neck({ g, range, leftHanded, highlightStrings }: { g:
   return (
     <g aria-hidden="true">
       <rect x={woodLeft} y={top - 12} width={woodRight - woodLeft} height={bottom - top + 24} rx={3} style={{ fill: 'var(--neck)' }} />
-      {/* Bone binding along both edges of the board */}
       <line x1={woodLeft} x2={woodRight} y1={top - 11.5} y2={top - 11.5} strokeWidth={1.4} style={{ stroke: 'var(--neck-binding)', opacity: 0.55 }} />
       <line x1={woodLeft} x2={woodRight} y1={bottom + 11.5} y2={bottom + 11.5} strokeWidth={1.4} style={{ stroke: 'var(--neck-binding)', opacity: 0.55 }} />
       {g.frets
@@ -175,7 +168,6 @@ const Neck = memo(function Neck({ g, range, leftHanded, highlightStrings }: { g:
           />
         )
       })}
-      {/* fret numbers */}
       {g.frets.map((f) => {
         const marker = SINGLE_MARKERS.includes(f) || DOUBLE_MARKERS.includes(f)
         if (dense && !marker && f !== 0 && f !== 1 && f !== range.start) return null
@@ -185,7 +177,7 @@ const Neck = memo(function Neck({ g, range, leftHanded, highlightStrings }: { g:
             x={g.center(f)}
             y={bottom + 28}
             textAnchor="middle"
-            style={{ fill: marker ? 'var(--ink-soft)' : 'var(--muted)', fontSize: 11.5, fontWeight: marker ? 650 : 450 }}
+            style={{ fill: marker ? 'var(--ink-soft)' : 'var(--muted)', fontSize: 11.5, fontWeight: marker ? 600 : 400 }}
           >
             {f === 0 ? 'open' : f}
           </text>
@@ -207,7 +199,6 @@ const Dot = memo(function Dot({ m, g, rootEmphasis }: { m: FretMark; g: Geometry
   let r = ghost ? 7 : DOT_R + (two ? 1.5 : 0) + (emph === 'strong' ? 0.8 : 0)
   if (isRoot && rootEmphasis && !ghost && !hollow) r += 0.6
   const color = FILL[m.tone]
-  // On the dark neck: ghosts are rings in the wood, outlined notes are dark with a coloured edge.
   const shapeStyle = ghost
     ? { fill: 'var(--neck)', stroke: m.tone === 'plain' ? 'var(--neck-ink-soft)' : color, strokeWidth: 1.5, opacity: 0.9 }
     : hollow
@@ -449,7 +440,7 @@ export const Fretboard = memo(function Fretboard({
             viewBox={`0 0 ${g.width} ${g.height}`}
             width="100%"
             style={{ display: 'block' }}
-            className="select-none font-sans"
+            className="select-none font-mono"
             role="img"
             aria-label={ariaLabel}
             onMouseLeave={() => setHover(null)}
@@ -470,7 +461,7 @@ export const Fretboard = memo(function Fretboard({
                         style={{ fill: 'var(--region)', stroke: 'var(--region-line)', strokeWidth: 1.4 }}
                       />
                       {regionLabel && !bands && (
-                        <text x={(x1 + x2) / 2} y={8} textAnchor="middle" style={{ fill: 'var(--ink-soft)', fontSize: 11, fontWeight: 650 }}>
+                        <text x={(x1 + x2) / 2} y={8} className="font-sans" textAnchor="middle" style={{ fill: 'var(--ink-soft)', fontSize: 11, fontWeight: 650 }}>
                           {regionLabel}
                         </text>
                       )}
@@ -545,7 +536,6 @@ export const Fretboard = memo(function Fretboard({
   )
 })
 
-/** Small caption slot used under some boards. */
 export function NeckCaption({ children }: { children: ReactNode }) {
   return <p className="prose-note mt-3 max-w-[68ch] text-[15.5px]">{children}</p>
 }

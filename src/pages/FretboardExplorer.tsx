@@ -136,7 +136,6 @@ function NoteExplorer() {
   )
 }
 
-/** Click any fret to see where the same note repeats. */
 function OctaveShapes() {
   const name = usePcName()
   const [pick, setPick] = useState<FretPos>({ string: 6, fret: 3 })
@@ -220,7 +219,6 @@ function Landmarks() {
 
 const QUIZ_KEY = `${BRAND.storagePrefix}:note-quiz`
 
-/** Lightweight "what note is this?" drill. */
 function NoteQuiz() {
   const name = usePcName()
   const { accidentals } = usePrefs()

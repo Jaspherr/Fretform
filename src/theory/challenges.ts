@@ -13,24 +13,18 @@ export type ChallengeKind = 'find-note' | 'find-interval' | 'octave' | 'shared' 
 
 export interface Challenge {
   kind: ChallengeKind
-  /** The question, phrased as a player would ask it */
   prompt: string
-  /** Frets the answer must be inside */
   range: FretRange
-  /** Positions shown as context (e.g. the root you're measuring from) */
   given: FretPos[]
-  /** Every correct position in range */
   answers: FretPos[]
   /** Pitch classes that count as correct (for explaining near misses) */
   correctPcs: PitchClass[]
-  /** Optional string restriction */
   onString?: StringNum
   context: { rootPc?: PitchClass; nextRootPc?: PitchClass; quality?: string; nextQuality?: string }
 }
 
 export interface ChallengeResult {
   correct: boolean
-  /** What the tapped note is, in musical terms */
   explanation: string
 }
 
@@ -135,7 +129,6 @@ export function makeChallenge(kind: ChallengeKind, rng: Rng): Challenge {
   }
 }
 
-/** Is the tap right, and what is the tapped note? */
 export function checkTap(c: Challenge, p: FretPos): ChallengeResult {
   const pc = pcAt(p.string, p.fret)
   const inRange = p.fret >= c.range.start && p.fret <= c.range.end

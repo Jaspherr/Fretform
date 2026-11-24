@@ -151,7 +151,6 @@ export function Atlas() {
     }
   })()
 
-  /* ------------------------------------------------------------------ interaction */
   const go = (s: Step) => {
     setArrived(false)
     setStep(s)
@@ -161,7 +160,6 @@ export function Atlas() {
     setAt(placementId(v))
   }
   const onTap = (p: FretPos) => {
-    // Tap a chord tone → jump to a shape that uses it (cycling if several do).
     const owners = placements.filter((v) => v.frets[6 - p.string] === p.fret)
     if (!owners.length) return
     const i = owners.findIndex((v) => v === shape)
@@ -174,7 +172,6 @@ export function Atlas() {
     ? placements.map((v) => ({ id: placementId(v), label: v.template.caged ?? v.template.name, start: v.minFret, end: v.maxFret, active: v === shape, description: `${v.template.name}, frets ${v.minFret} to ${v.maxFret}` }))
     : undefined
 
-  /* ------------------------------------------------------------------ what the player is looking at */
   const lowestRoot = shapePos.filter((p) => mod12(STANDARD_TUNING[6 - p.string].openMidi + p.fret) === rootPc).sort((a, b) => b.string - a.string)[0]
   const triadNames = triad.strings.map((s, i) => {
     const pc = mod12(STANDARD_TUNING[6 - s].openMidi + triad.frets[i])

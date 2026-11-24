@@ -118,7 +118,7 @@ function ReferenceTableView({ table }: { table: ReferenceTable }) {
             return [
               <Link key="n" to={`/chords?root=C&quality=${q.id}`} className="font-medium text-accent hover:underline">{q.name}</Link>,
               <span key="f" className="flex gap-1">{c.tones.map((t) => <IntervalBadge key={t.interval} interval={t.interval} family={t.family} />)}</span>,
-              pretty(chordSymbol(0, q, accidentals)) + ': ' + c.tones.map((t) => pretty(displayNote(t.spelled, accidentals))).join(' '),
+              <span key="n" className="font-mono text-[13px]">{pretty(chordSymbol(0, q, accidentals))}: {c.tones.map((t) => pretty(displayNote(t.spelled, accidentals))).join(' ')}</span>,
               q.sound,
             ]
           })}
@@ -133,7 +133,7 @@ function ReferenceTableView({ table }: { table: ReferenceTable }) {
             return [
               <Link key="n" to={`/scales?root=C&scale=${s.id}`} className="font-medium text-accent hover:underline">{s.name}</Link>,
               <span key="f" className="font-mono text-[13px]">{s.formula.join(' ').replace(/b/g, '♭').replace(/#/g, '♯')}</span>,
-              sc.tones.map((t) => pretty(displayNote(t.spelled, accidentals))).join(' '),
+              <span key="n" className="font-mono text-[13px]">{sc.tones.map((t) => pretty(displayNote(t.spelled, accidentals))).join(' ')}</span>,
             ]
           })}
         />
@@ -157,7 +157,7 @@ function ReferenceTableView({ table }: { table: ReferenceTable }) {
               <Link key="n" to={`/scales/modes?root=C&mode=${m.scaleId}`} className="font-medium text-accent hover:underline">{m.name}</Link>,
               `Degree ${m.degree} of major`,
               <span key="f" className="font-mono text-[13px]">{s.formula.join(' ').replace(/b/g, '♭').replace(/#/g, '♯')}</span>,
-              m.characteristic.join(', ').replace(/b/g, '♭').replace(/#/g, '♯'),
+              <span key="c" className="font-mono text-[13px]">{m.characteristic.join(', ').replace(/b/g, '♭').replace(/#/g, '♯')}</span>,
             ]
           })}
         />

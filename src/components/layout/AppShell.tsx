@@ -18,7 +18,7 @@ export function Logo() {
         <path d="M5 9h22M5 16h22M5 23h22" stroke="var(--on-accent)" strokeOpacity="0.8" strokeWidth="1" />
         <rect x="12.5" y="12.5" width="7" height="7" rx="1.8" fill="var(--on-accent)" />
       </svg>
-      <span className="text-[18px] font-bold tracking-tight text-ink" style={{ fontStretch: '85%' }}>
+      <span className="text-[18px] font-semibold tracking-[-0.03em] text-ink">
         {BRAND.name}
       </span>
     </Link>
@@ -93,7 +93,7 @@ export function AppShell() {
             >
               <SearchIcon className="size-4" />
               <span className="hidden xl:inline">Search chords, scales…</span>
-              <kbd aria-hidden="true" className="hidden rounded border border-line px-1 text-[11px] xl:inline">Ctrl K</kbd>
+              <kbd aria-hidden="true" className="hidden rounded border border-line px-1 font-mono text-[11px] xl:inline">Ctrl K</kbd>
             </button>
             <DisplaySettings />
             <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu" onClick={() => setMenuOpen(true)}>
@@ -167,7 +167,6 @@ export function AppShell() {
   )
 }
 
-/** Second-level tabs for sections that hold several tools (Chords, Scales…). */
 export function SubNav({ items }: { items: { to: string; label: string; end?: boolean }[] }) {
   return (
     <nav aria-label="Section" className="scroll-x -mx-4 mb-6 flex gap-1 overflow-y-hidden border-b border-line px-4 sm:mx-0 sm:px-0">

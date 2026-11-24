@@ -1,6 +1,3 @@
-/**
- * Information architecture: see NAV_GROUPS.
- */
 export interface NavItem {
   to: string
   label: string

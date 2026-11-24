@@ -14,7 +14,6 @@ import { SCALES } from '@/theory/scales'
 import { CAGED_ORDER, type CagedShape } from '@/theory/voicings'
 import { COMMON_PROGRESSIONS } from '@/theory/diatonic'
 
-/** A labeled control group. */
 export function Field({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
@@ -42,7 +41,6 @@ export function RootSelector({ value, onChange, label = 'Root' }: { value: Pitch
 const COMMON_QUALITIES = EXPLORER_QUALITIES.filter((q) => q.tier === 'common')
 const MORE_QUALITIES = EXPLORER_QUALITIES.filter((q) => q.tier === 'more')
 
-/** Common qualities up front; the rest in a "More" menu. */
 export function ChordSelector({ value, onChange }: { value: string; onChange: (id: string) => void }) {
   const isMore = MORE_QUALITIES.some((q) => q.id === value)
   return (
@@ -174,7 +172,6 @@ export function LayerControls<T extends string>({
   )
 }
 
-/** Global display settings: labels, spelling, handedness, root emphasis, theme. */
 export function DisplaySettings({ trigger }: { trigger?: ReactNode }) {
   const p = usePrefs()
   const [open, setOpen] = useState(false)

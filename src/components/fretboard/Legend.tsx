@@ -23,12 +23,11 @@ const BADGE_RADIUS: Record<MarkTone, string> = {
   selected: 'rounded-full',
 }
 
-function Badge({ text, tone, mono, className }: { text: string; tone: MarkTone; mono?: boolean; className?: string }) {
+function Badge({ text, tone, className }: { text: string; tone: MarkTone; className?: string }) {
   return (
     <span
       className={cn(
-        'inline-flex h-6 min-w-6 items-center justify-center px-1.5 text-[12.5px] font-semibold',
-        mono && 'tabular-nums',
+        'inline-flex h-6 min-w-6 items-center justify-center px-1.5 font-mono text-[12.5px] font-semibold',
         BADGE_RADIUS[tone],
         tone === 'plain' && 'border border-line-strong',
         className,
@@ -42,7 +41,7 @@ function Badge({ text, tone, mono, className }: { text: string; tone: MarkTone; 
 
 /** Coloured badge that always carries text, so colour is never the only signal. */
 export function IntervalBadge({ interval, family, className }: { interval: string; family: IntervalFamily; className?: string }) {
-  return <Badge text={prettyInterval(interval)} tone={family} mono className={className} />
+  return <Badge text={prettyInterval(interval)} tone={family} className={className} />
 }
 
 export function NoteBadge({ note, family, className }: { note: string; family: MarkTone; className?: string }) {

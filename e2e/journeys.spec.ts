@@ -24,7 +24,6 @@ test.describe('desktop journeys', () => {
     await page.goto('/')
     const steps = page.getByRole('navigation', { name: 'Questions about this chord' })
     await expect(page.getByText(/G is G – B – D/)).toBeVisible()
-    // Tap a note: jump to a shape that uses it.
     await page.getByRole('button', { name: 'Next: Where can I grab it?' }).click()
     await expect(page).toHaveURL(/step=shape/)
     await expect(page.getByText(/E shape at fret 3/)).toBeVisible()
@@ -47,7 +46,6 @@ test.describe('desktop journeys', () => {
     await page.goto('/learn/know-the-intervals')
     const ch = page.getByRole('region', { name: /Your turn/ })
     await expect(ch.getByText(/Find the (3rd|♭3rd|5th) of/)).toBeVisible()
-    // Tap one of the given roots: it is explained, and it is not the answer.
     await ch.getByRole('button', { name: 'Another one' }).click()
     await ch.getByRole('group').first().focus()
     await page.keyboard.press('ArrowRight')

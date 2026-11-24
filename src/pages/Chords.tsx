@@ -21,7 +21,6 @@ import { type Voicing, generateVoicings } from '@/theory/voicings'
 const QUALITY_IDS = EXPLORER_QUALITIES.map((q) => q.id)
 const TRIAD_QUALITIES = new Set(['major', 'minor', 'dim', 'aug', 'sus2', 'sus4'])
 
-/** A chord shape the explorer can show: a full voicing or a three-string triad. */
 interface ShapeItem {
   id: string
   kind: 'voicing' | 'triad'
@@ -91,7 +90,6 @@ function ChordHeader({ chord, pref }: { chord: Chord; pref: AccidentalPref }) {
   )
 }
 
-/** Chord tones across the neck, with the chosen shape in front and everything else faded. */
 function useChordMarks(chord: Chord, shape: ShapeItem | null, rootName: string, focus?: { start: number; end: number } | null, ringed?: Set<string>) {
   const { labels, accidentals } = usePrefs()
   return useMemo(() => {
@@ -256,8 +254,6 @@ export function ChordsPage() {
   )
 }
 
-/* ---------------------------------------------------------------------------------- */
-
 const REGION_IDS = NECK_REGIONS.map((r) => r.id)
 
 export function ElsewherePage() {
@@ -329,7 +325,7 @@ export function ElsewherePage() {
       )}
       {inRegionV.length > 0 && (
         <>
-          <h3 className="mb-3 font-sans text-[13px] font-semibold text-muted">Full chord shapes</h3>
+          <h3 className="mb-3 text-[13px] font-semibold text-muted">Full chord shapes</h3>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {inRegionV.map((v) => (
               <VoicingCard key={v.id} {...v} tones={chord.tones} selected={selected?.id === v.id} onSelect={() => setSelectedId(v.id)} />
@@ -339,7 +335,7 @@ export function ElsewherePage() {
       )}
       {inRegionT.length > 0 && (
         <>
-          <h3 className="mb-3 mt-8 font-sans text-[13px] font-semibold text-muted">Triads (three-string shapes)</h3>
+          <h3 className="mb-3 mt-8 text-[13px] font-semibold text-muted">Triads (three-string shapes)</h3>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {inRegionT.map((v) => (
               <VoicingCard key={v.id} {...v} tones={chord.tones} selected={selected?.id === v.id} onSelect={() => setSelectedId(v.id)} />

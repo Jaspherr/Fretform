@@ -168,8 +168,6 @@ export function ScalesPage() {
   )
 }
 
-/* ---------------------------------------------------------------------------------- */
-
 const PENT_IDS = ['minor-pentatonic', 'major-pentatonic'] as const
 
 export function ConnectPage() {

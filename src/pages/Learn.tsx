@@ -35,7 +35,6 @@ export function LearnIndex() {
   )
 }
 
-/** Which "find it yourself" challenge closes each lesson. */
 const CHALLENGE_FOR: Record<LessonTool, ChallengeKind> = {
   notes: 'find-note',
   intervals: 'find-interval',
@@ -93,7 +92,7 @@ export function LessonPage() {
       <StageLabel n={3} label="Apply" text="Find it yourself. Each tap tells you what you hit and why it is (or isn’t) the answer." />
       <Challenge kind={CHALLENGE_FOR[lesson.tool]} title={`Your turn — ${lesson.title.toLowerCase()}`} />
       <p className="prose-note mt-4 max-w-[68ch] border-l-2 border-ink pl-4 text-[16px]">
-        <b className="font-sans text-[14px] text-ink">On your guitar: </b>
+        <b className="text-[14px] font-semibold text-ink">On your guitar: </b>
         {lesson.tryThis}
       </p>
       <div className="mt-6">

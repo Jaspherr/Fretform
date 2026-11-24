@@ -9,7 +9,6 @@ export function Page({ children, className }: { children: ReactNode; className?:
   return <div className={cn('mx-auto w-full max-w-[1320px] px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8', className)}>{children}</div>
 }
 
-/** Tool title: a short, plain heading and one sentence of context. The neck does the rest. */
 export function PageHeader({ eyebrow, title, children, actions }: { eyebrow?: string; title: ReactNode; children?: ReactNode; actions?: ReactNode }) {
   return (
     <header className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -23,10 +22,6 @@ export function PageHeader({ eyebrow, title, children, actions }: { eyebrow?: st
   )
 }
 
-/**
- * The workspace a neck sits on. No card: the ebony neck carries the weight, so
- * a section is just a rule and some room — the same as the home page.
- */
 export function Panel({ children, className, title, aside }: { children: ReactNode; className?: string; title?: ReactNode; aside?: ReactNode }) {
   return (
     <section className={cn('border-t border-line pt-5 sm:pt-6', className)}>
@@ -41,7 +36,6 @@ export function Panel({ children, className, title, aside }: { children: ReactNo
   )
 }
 
-/** Row of question-style controls above a neck. */
 export function ControlBar({ children, className }: { children: ReactNode; className?: string }) {
   return <div className={cn('mb-4 flex flex-wrap items-end gap-x-6 gap-y-3', className)}>{children}</div>
 }
@@ -71,7 +65,6 @@ export function SectionTitle({ children, sub }: { children: ReactNode; sub?: Rea
   )
 }
 
-/** The four-part teaching notes, laid out like margin notes rather than cards. */
 export function LessonPanel({
   seeing,
   matters,
@@ -114,7 +107,6 @@ export function TheoryCard({ label, children, className }: { label: string; chil
   )
 }
 
-/** A dismissible tip; dismissal is remembered. */
 export function Tip({ id, children }: { id: string; children: ReactNode }) {
   const { dismissedTips, dismissTip } = usePrefs()
   if (dismissedTips.includes(id)) return null
@@ -136,7 +128,6 @@ export function ToolLink({ to, children }: { to: string; children: ReactNode }) 
   )
 }
 
-/** "Where next" links at the end of a tool — phrased as the guitarist's next question. */
 export function NextSteps({ items }: { items: { to: string; q: string; a: string }[] }) {
   return (
     <nav aria-label="Where next" className="mt-14 border-t border-line pt-6">

@@ -12,7 +12,6 @@ export interface ChordQuality {
   /** Tones that can be left out and the chord still reads the same (usually the 5th). */
   optional?: string[]
   tier: ChordTier
-  /** One-liner in plain language. */
   sound: string
 }
 
@@ -75,5 +74,4 @@ export function chordLongName(rootPc: PitchClass, quality: ChordQuality, pref: A
   return `${pretty(chordRootName(rootPc, quality, pref))} ${quality.name}`
 }
 
-/** Triad qualities offered by the triad tools. */
 export const TRIAD_QUALITY_IDS = ['major', 'minor', 'dim', 'aug', 'sus2', 'sus4'] as const

@@ -33,7 +33,6 @@ export function cagedPositions(rootPc: PitchClass, quality: 'major' | 'minor' = 
   return out.sort((a, b) => a.voicing.minFret - b.voicing.minFret)
 }
 
-/** Same position one octave up, if it fits. */
 export function octaveUp(p: CagedPosition): CagedPosition | null {
   const v = placeTemplate(p.voicing.template, p.voicing.rootFret + 12)
   if (!v) return null
@@ -52,7 +51,6 @@ export function neighbors(shape: CagedShape): { prev: CagedShape; next: CagedSha
   return { prev: CAGED_ORDER[(i + 4) % 5], next: CAGED_ORDER[(i + 1) % 5] }
 }
 
-/** Scale notes in the fret window around a CAGED shape. */
 export function scaleRegion(pcs: Set<PitchClass>, start: number, end: number): FretPos[] {
   const out: FretPos[] = []
   for (const s of STRINGS_LOW_TO_HIGH)

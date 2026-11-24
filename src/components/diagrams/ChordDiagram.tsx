@@ -42,8 +42,7 @@ export const ChordDiagram = memo(function ChordDiagram({
   const H = top + gapY * rows + (showFingers ? 30 : 12)
   const x = (i: number) => left + i * gapX
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className={cn('w-full max-w-[150px]', className)} role="img" aria-label={label}>
-      {/* nut or position */}
+    <svg viewBox={`0 0 ${W} ${H}`} className={cn('w-full max-w-[150px] font-mono', className)} role="img" aria-label={label}>
       {start === 1 ? (
         <rect x={x(0) - 1} y={top - 4} width={x(5) - x(0) + 2} height={4} rx={1} style={{ fill: 'var(--ink)' }} />
       ) : (

@@ -68,7 +68,6 @@ function InversionCards({ tones, active, onPick }: { tones: Tone[]; active: Inve
   )
 }
 
-/** "This small triad is actually part of the big chord you already know." */
 function FullChordToTriad({ rootPc, quality }: { rootPc: number; quality: 'major' | 'minor' }) {
   const { labels, accidentals } = usePrefs()
   const [shape, setShape] = useState<CagedShape>('E')
@@ -284,8 +283,6 @@ export function TriadsPage() {
     </Page>
   )
 }
-
-/* ---------------------------------------------------------------------------------- */
 
 const START_AREAS = [
   { value: '3', label: 'Low (around fret 3)' },

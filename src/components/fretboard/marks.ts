@@ -22,7 +22,6 @@ export interface FretMark extends FretPos {
   sub?: string
   tone: MarkTone
   emphasis?: Emphasis
-  /** Extra outer ring for special meaning */
   ring?: 'target' | 'shared' | 'char' | 'selected'
   /** Read out by the inspector / screen readers */
   info?: string
@@ -47,7 +46,6 @@ export function describeTone(tone: Tone, pref: AccidentalPref, rootName?: string
   return rootName ? `${note} — ${name.toLowerCase()} of ${rootName}` : `${note} — ${name}`
 }
 
-/** Label tones according to the user's display preferences. */
 export function useToneLabeler() {
   const { labels, accidentals } = usePrefs()
   return useCallback(
@@ -65,9 +63,7 @@ export interface ToneMarksOptions {
   emphasis?: (tone: Tone, pos: FretPos) => Emphasis | undefined
   tone?: (tone: Tone) => MarkTone
   ring?: (tone: Tone, pos: FretPos) => FretMark['ring']
-  /** Only these strings */
   strings?: StringNum[]
-  /** Only these positions (e.g. a CAGED region or pattern) */
   only?: (pos: FretPos) => boolean
 }
 
