@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Field, FretRangeSelector, RootSelector } from '@/components/controls'
+import { Field, FretRangeSelector } from '@/components/controls'
 import { Tab } from '@/components/diagrams/Tab'
 import { Fretboard } from '@/components/fretboard/Fretboard'
 import { INTERVAL_LEGEND, Legend, NoteBadge } from '@/components/fretboard/Legend'
 import { type FretMark, describeTone, labelTone, toneMarks } from '@/components/fretboard/marks'
 import { SubNav } from '@/components/layout/AppShell'
-import { ControlBar, LessonPanel, MoreOptions, Page, PageHeader, Panel, SectionTitle, Tip, ToolLink, OnTheNeck } from '@/components/layout/page'
+import { ControlBar, LessonPanel, Page, PageHeader, Panel, SectionTitle, Tip, ToolLink, OnTheNeck } from '@/components/layout/page'
 import { FILL_NAV } from '@/components/layout/sections'
 import { Segmented } from '@/components/ui/segmented'
 import { usePrefs } from '@/lib/prefs'
@@ -40,6 +40,43 @@ function ChordPicker({ label, chords, value, onChange }: { label: string; chords
         onChange={onChange}
         options={chords.map((c) => ({ value: String(c.degree) as Degree, label: <span><span className="font-semibold">{pretty(c.symbol)}</span> <span className="text-[12px] text-muted">{c.roman}</span></span> }))}
       />
+    </Field>
+  )
+}
+
+/** Use the same segmented visual style as the chord controls, not a dropdown. */
+const MAJOR_KEYS = Array.from({ length: 12 }, (_, pc) => String(pc))
+
+function MajorKeyPicker({
+  label,
+  value,
+  onChange,
+  accidentals,
+}: {
+  label: string
+  value: number
+  onChange: (pc: number) => void
+  accidentals: ReturnType<typeof usePrefs>['accidentals']
+}) {
+  const options = useMemo(
+    () => MAJOR_KEYS.map((key) => ({
+      value: key,
+      label: pretty(displayNote(buildScale(Number(key), 'major', accidentals).tones[0].spelled, accidentals)),
+    })),
+    [accidentals],
+  )
+
+  return (
+    <Field label={label}>
+      <div className="min-w-0 max-w-full overflow-x-auto pb-1">
+        <Segmented<string>
+          label={label}
+          size="sm"
+          value={String(value)}
+          onChange={(key) => onChange(Number(key))}
+          options={options}
+        />
+      </div>
     </Field>
   )
 }
@@ -158,9 +195,9 @@ export function FillsPage() {
           <ChordPicker label="Which chord are you on?" chords={chords} value={curDeg} onChange={setCurDeg} />
           <ChordPicker label="Where are you going?" chords={chords} value={nextDeg} onChange={setNextDeg} />
         </ControlBar>
-        <MoreOptions label={`Key: ${keyName} major`}>
-          <RootSelector label="Which key?" value={keyPc} onChange={setKey} />
-        </MoreOptions>
+        <ControlBar>
+          <MajorKeyPicker label="Key (major)" value={keyPc} onChange={setKey} accidentals={accidentals} />
+        </ControlBar>
 
         <p className="mb-2 text-[14.5px] text-ink-soft" aria-live="polite">
           Your hand is at <b className="text-ink">frets {range.start}–{range.end}</b>. Tap anywhere on the neck to move it.
@@ -261,7 +298,7 @@ export function ChordTonesPage() {
       </PageHeader>
       <Panel>
         <ControlBar>
-          <RootSelector label="Key (major)" value={keyPc} onChange={setKey} />
+          <MajorKeyPicker label="Key (major)" value={keyPc} onChange={setKey} accidentals={accidentals} />
         </ControlBar>
         <ControlBar>
           <ChordPicker label="Chord" chords={chords} value={deg} onChange={setDeg} />
